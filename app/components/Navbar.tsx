@@ -68,7 +68,7 @@ export default function Navbar() {
   const renderLinks = (mobile = false) => links.map(({ id, label }) => (
     <a
       key={id}
-      href={`#${id}`}
+      href={`/#${id}`}
       aria-current={activeSection === id ? "location" : undefined}
       onClick={() => { setActiveSection(id); setMenuOpen(false); }}
       className={`relative rounded-lg font-medium transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d9902f] ${mobile ? "px-4 py-3 text-sm" : "px-2 py-3 text-[13px] xl:px-2.5"} ${activeSection === id ? "bg-[#d9902f]/10 text-[#a46116]" : "text-[#344334] hover:bg-[#f5f3ec] hover:text-[#a46116]"}`}
@@ -91,7 +91,7 @@ export default function Navbar() {
       </div>
       <header className="sticky top-0 z-50 border-b border-[#173f35]/10 bg-[#fffdf8]/95 shadow-[0_4px_24px_rgba(23,63,53,0.05)] backdrop-blur-md">
         <nav ref={navRef} aria-label="Main navigation" className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-5 py-4">
-          <a href="#home" onClick={() => { setActiveSection("home"); setMenuOpen(false); }} className="flex shrink-0 items-center gap-2.5 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d9902f]">
+          <a href="/#home" onClick={() => { setActiveSection("home"); setMenuOpen(false); }} className="flex shrink-0 items-center gap-2.5 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d9902f]">
             <Image
               src="/images/safari-logo-transparent.png"
               alt="Safari Travel elephant logo"

@@ -1,0 +1,43 @@
+.villageImage {
+  opacity: 0;
+  animation: village-background 18s ease-in-out infinite;
+}
+
+.sigiriyaImage {
+  opacity: 0;
+  animation: sigiriya-background 18s ease-in-out infinite;
+}
+
+@keyframes village-background {
+  0%,
+  26.667%,
+  73.333%,
+  100% {
+    opacity: 0;
+  }
+
+  33.333%,
+  66.667% {
+    opacity: 1;
+  }
+}
+
+@keyframes sigiriya-background {
+  0%,
+  60%,
+  100% {
+    opacity: 0;
+  }
+
+  66.667%,
+  93.333% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .villageImage,
+  .sigiriyaImage {
+    animation: none;
+  }
+}

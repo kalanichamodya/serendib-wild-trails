@@ -48,7 +48,7 @@ export default function VillageTour() {
           <div className="ml-8 flex items-center gap-2 border-l border-white/30 pl-5">
             <Clock3 size={20} />
 
-            <span className="text-sm font-semibold">3–4 Hours</span>
+            <span className="text-sm font-semibold">3 - 4 Hours</span>
           </div>
         </div>
       </div>
@@ -64,11 +64,9 @@ export default function VillageTour() {
         <div className="relative z-10 max-w-2xl">
           {/* Small heading */}
           <div className="flex items-center gap-4">
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#f5bd5d]">
-              Village Experience
+            <p className="text-[14px] font-bold uppercase tracking-[0.3em] text-[#f5bd5d]">
+              Village Experience ---
             </p>
-
-            <span className="h-px w-16 bg-[#f5bd5d]" />
           </div>
 
           {/* Main heading */}

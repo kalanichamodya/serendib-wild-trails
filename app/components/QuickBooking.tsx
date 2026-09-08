@@ -16,8 +16,8 @@ export default function QuickBooking() {
     <section className="relative z-20 mx-auto -mb-16 w-full max-w-[1180px] -translate-y-1/4 px-5">
       <div className="grid overflow-hidden rounded-[26px] bg-[#f3efe9] shadow-[0_18px_35px_rgba(0,0,0,0.18)] ring-1 ring-[#d6c8b4] lg:grid-cols-[0.9fr_1.9fr_0.8fr]">
         <div className="bg-[#2f3f1e] p-5 text-white md:p-6">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#e0b566]">
-            Start Your Journey
+          <p className="text-[12px] font-bold uppercase tracking-[0.22em] text-[#e0b566]">
+            Start Your Journey ---
           </p>
 
           <h2 className="mt-4 max-w-[220px] text-[2.2rem] font-bold leading-[0.94] tracking-[-0.05em]">

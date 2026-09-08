@@ -88,11 +88,9 @@ export default function Testimonials() {
         <div className="grid gap-8 lg:grid-cols-2 lg:items-end">
           <div>
             <div className="flex items-center gap-4">
-              <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#e7ad4a]">
-                Sample Testimonials
+              <p className="text-[14px] font-bold uppercase tracking-[0.28em] text-[#e7ad4a]">
+                Sample Testimonials ---
               </p>
-
-              <span className="h-px w-16 bg-[#e7ad4a]" />
             </div>
 
             <h2 className="mt-6 max-w-2xl text-4xl font-bold leading-tight text-white md:text-5xl">

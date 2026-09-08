@@ -39,11 +39,9 @@ export default function Contact() {
 
             <div className="relative z-10 max-w-2xl">
               <div className="flex items-center gap-4">
-                <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#d9902f]">
-                  Start Your Journey
+                <p className="text-[14px] font-bold uppercase tracking-[0.28em] text-[#d9902f]">
+                  Start Your Journey ---
                 </p>
-
-                <span className="h-px w-16 bg-[#d9902f]" />
               </div>
 
               <h2 className="mt-2 text-xl font-bold leading-tight text-[#173f35] md:text-2xl">

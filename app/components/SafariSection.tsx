@@ -23,7 +23,7 @@ const safaris: Safari[] = [
     name: "Minneriya Safari",
     description:
       "Explore reservoir landscapes and seasonal gatherings of wild elephants.",
-    duration: "3–4 Hours",
+    duration: "3 - 4 Hours",
     bestFor: "Elephants",
     image: "/images/minneriya-elephants.webp",
   },
@@ -32,7 +32,7 @@ const safaris: Safari[] = [
     name: "Kaudulla Safari",
     description:
       "Journey through peaceful forest trails filled with elephants and native birds.",
-    duration: "3–4 Hours",
+    duration: "3 - 4 Hours",
     bestFor: "Photography",
     image: "/images/kaudulla-safari.webp",
   },
@@ -71,11 +71,9 @@ export default function SafariSection() {
           {/* Left heading */}
           <div>
             <div className="flex items-center gap-4">
-              <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#d9902f]">
-                Safari Experiences
+              <p className="text-[14px] font-bold uppercase tracking-[0.28em] text-[#d9902f]">
+                Safari Experiences ---
               </p>
-
-              <span className="h-px w-16 bg-[#d9902f]" />
             </div>
 
             <h2 className="mt-6 max-w-xl text-5xl font-bold leading-[1.05] text-[#173f35] md:text-6xl">

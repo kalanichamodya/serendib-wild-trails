@@ -59,11 +59,9 @@ export default function Destinations() {
         <div className="flex flex-col gap-7 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <div className="flex items-center gap-4">
-              <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#d9902f]">
-                Cultural Destinations
+              <p className="text-[14px] font-bold uppercase tracking-[0.28em] text-[#d9902f]">
+                Cultural Destinations ---
               </p>
-
-              <span className="h-px w-16 bg-[#d9902f]" />
             </div>
 
             <h2 className="mt-6 max-w-2xl text-4xl font-bold leading-tight text-[#173f35] md:text-5xl">
@@ -126,29 +124,6 @@ export default function Destinations() {
               </div>
             </article>
           ))}
-        </div>
-
-        {/* Bottom message */}
-        <div className="mt-10 flex flex-col gap-5 rounded-2xl bg-[#f8f5ee] px-6 py-6 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="font-bold text-[#173f35]">
-              Need help planning your route?
-            </p>
-
-            <p className="mt-1 text-sm text-gray-600">
-              Combine a safari and cultural destination into one memorable
-              journey.
-            </p>
-          </div>
-
-          <a
-            href="https://wa.me/94774639048"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full bg-[#173f35] px-7 py-4 text-center font-semibold text-white transition hover:bg-[#d9902f]"
-          >
-            Create My Journey →
-          </a>
         </div>
       </div>
     </section>

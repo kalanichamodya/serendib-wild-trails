@@ -1,11 +1,13 @@
+import { CarFront, Leaf, MapPin } from "lucide-react";
+
 export default function About() {
   return (
     <section id="about" className="bg-[#fffdf8] px-5 py-24">
       <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-2">
         {/* Left side content */}
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#d9902f]">
-            Who We Are
+          <p className="text-[14px] font-bold uppercase tracking-[0.25em] text-[#d9902f]">
+            Who We Are ---
           </p>
 
           <h2 className="mt-4 max-w-2xl text-4xl font-bold leading-tight text-[#173f35] md:text-5xl">
@@ -29,8 +31,8 @@ export default function About() {
           <div className="mt-7 grid max-w-[640px] gap-4 sm:grid-cols-3">
             {/* Home base card */}
             <div className="rounded-2xl border border-[#e3d8c2] bg-[#f7f2ea] p-4 shadow-sm">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f0e7d3] text-lg">
-                📍
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f0e7d3] text-[#173f35]">
+                <MapPin size={19} strokeWidth={1.8} aria-hidden="true" />
               </div>
 
               <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#b58b46]">
@@ -44,8 +46,8 @@ export default function About() {
 
             {/* Tour style card */}
             <div className="rounded-2xl border border-[#e3d8c2] bg-[#f7f2ea] p-4 shadow-sm">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f0e7d3] text-lg">
-                🚙
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f0e7d3] text-[#173f35]">
+                <CarFront size={19} strokeWidth={1.8} aria-hidden="true" />
               </div>
 
               <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#b58b46]">
@@ -59,8 +61,8 @@ export default function About() {
 
             {/* Experiences card */}
             <div className="rounded-2xl border border-[#e3d8c2] bg-[#f7f2ea] p-4 shadow-sm">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f0e7d3] text-lg">
-                🌿
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f0e7d3] text-[#173f35]">
+                <Leaf size={19} strokeWidth={1.8} aria-hidden="true" />
               </div>
 
               <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#b58b46]">
@@ -113,6 +115,10 @@ export default function About() {
             <div className="absolute bottom-6 left-6 p-6 text-white">
               <p className="text-4xl font-bold text-[#e7ad4a]">100%</p>
               <p className="mt-1 text-sm">Locally inspired journeys</p>
+              <p className="mt-3 max-w-xs text-sm leading-6 text-white">
+                Discover Sri Lanka&apos;s gentle giants and the wild beauty of
+                their natural home.
+              </p>
             </div>
           </div>
         </div>

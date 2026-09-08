@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowUp,
   MapPin,
@@ -20,6 +21,14 @@ export default function Footer() {
         {/* Brand */}
         <div>
           <Link href="#home" className="inline-block">
+            <Image
+              src="/images/safari-logo-transparent.png"
+              alt="Safari Travel elephant logo"
+              width={664}
+              height={683}
+              sizes="112px"
+              className="mb-4 h-auto w-28 object-contain"
+            />
             <p className="text-2xl font-bold">Serendib Wild Trails</p>
 
             <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-[#e7ad4a]">

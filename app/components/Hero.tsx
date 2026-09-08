@@ -1,3 +1,5 @@
+import styles from "./Hero.module.css";
+
 export default function Hero() {
   return (
     <section
@@ -7,14 +9,25 @@ export default function Hero() {
         backgroundImage: "url('/images/minneriya-elephants.webp')",
       }}
     >
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-0 bg-cover bg-center ${styles.villageImage}`}
+        style={{ backgroundImage: "url('/images/village-tour.png')" }}
+      />
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-0 bg-cover bg-center ${styles.sigiriyaImage}`}
+        style={{ backgroundImage: "url('/images/sigiriya.webp')" }}
+      />
+
       {/* Dark layer over the image */}
       <div className="absolute inset-0 bg-black/55"></div>
 
       {/* Hero content */}
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 py-24">
         <div className="max-w-3xl">
-          <p className="mb-5 text-sm font-semibold uppercase tracking-[0.25em] text-[#e2b85e]">
-            Explore Sri Lanka&apos;s Wild Side
+          <p className="mb-5 text-[16px] font-bold uppercase tracking-[0.25em] text-[#e2b85e]">
+            Explore Sri Lanka&apos;s Wild Side ---
           </p>
 
           <h1 className="text-5xl font-bold leading-tight text-white md:text-7xl">

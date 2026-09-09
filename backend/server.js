@@ -2,10 +2,11 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
-const connectDB = require("./config/db");
-const authRoutes = require("./routes/authRoutes");
 
 dotenv.config();
+
+const connectDB = require("./config/db");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
@@ -19,11 +20,14 @@ app.use(
   })
 );
 
+
 // Read JSON request bodies
 app.use(express.json());
 
+
 // Read cookies such as the refresh token
 app.use(cookieParser());
+
 
 // Test route
 app.get("/api/health", (req, res) => {
@@ -32,6 +36,8 @@ app.get("/api/health", (req, res) => {
     message: "Serendib Admin API is running",
   });
 });
+
+app.use("/api/auth", authRoutes);
 
 // Handle unknown API routes
 app.use((req, res) => {

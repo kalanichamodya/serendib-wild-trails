@@ -22,6 +22,7 @@ type SafariDetails = {
   description: string;
   highlights: string[];
   includes: string[];
+  gallery: string[];
 };
 
 const safariDetails: Record<string, SafariDetails> = {
@@ -47,6 +48,14 @@ const safariDetails: Record<string, SafariDetails> = {
       "Hotel pickup from the agreed area",
       "Flexible route based on park conditions",
     ],
+    gallery: [
+  "/images/safaris/minneriya-1.webp",
+  "/images/safaris/minneriya-2.webp",
+  "/images/safaris/minneriya-3.webp",
+  "/images/safaris/minneriya-4.webp",
+  "/images/safaris/minneriya-5.webp",
+  "/images/safaris/minneriya-6.webp",
+],
   },
 
   kaudulla: {
@@ -71,6 +80,14 @@ const safariDetails: Record<string, SafariDetails> = {
       "Convenient hotel pickup",
       "Seasonal safari route guidance",
     ],
+    gallery: [
+  "/images/safaris/kaudulla-1.webp",
+  "/images/safaris/kaudulla-2.webp",
+  "/images/safaris/kaudulla-3.webp",
+  "/images/safaris/kaudulla-4.webp",
+  "/images/safaris/kaudulla-5.webp",
+  "/images/safaris/kaudulla-6.webp",
+],
   },
 
   hurulu: {
@@ -95,6 +112,14 @@ const safariDetails: Record<string, SafariDetails> = {
       "Pickup from the agreed location",
       "Route selected for current conditions",
     ],
+    gallery: [
+  "/images/safaris/hurulu-1.webp",
+  "/images/safaris/hurulu-2.webp",
+  "/images/safaris/hurulu-3.webp",
+  "/images/safaris/hurulu-4.webp",
+  "/images/safaris/hurulu-5.webp",
+  "/images/safaris/hurulu-6.webp",
+],
   },
 
   "gal-oya": {
@@ -119,6 +144,14 @@ const safariDetails: Record<string, SafariDetails> = {
       "Experienced local guidance",
       "Pickup details confirmed before travel",
     ],
+    gallery: [
+  "/images/safaris/gal-oya-1.webp",
+  "/images/safaris/gal-oya-2.webp",
+  "/images/safaris/gal-oya-3.webp",
+  "/images/safaris/gal-oya-4.webp",
+  "/images/safaris/gal-oya-5.webp",
+  "/images/safaris/gal-oya-6.webp",
+],
   },
 };
 
@@ -175,7 +208,7 @@ export default async function SafariDetailPage({
           </Link>
 
           <p className="mt-10 text-xs font-bold uppercase tracking-[0.28em] text-[#e7ad4a]">
-            Private Safari Experience
+            Private Safari Experience ---
           </p>
 
           <h1 className="mt-5 max-w-4xl text-5xl font-bold md:text-7xl">
@@ -268,7 +301,7 @@ export default async function SafariDetailPage({
         <div className="mx-auto grid max-w-7xl gap-14 lg:grid-cols-[1.3fr_0.7fr]">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#d9902f]">
-              About This Experience
+              About This Experience ---
             </p>
 
             <h2 className="mt-5 text-4xl font-bold text-[#173f35]">
@@ -352,6 +385,65 @@ export default async function SafariDetailPage({
           </aside>
         </div>
       </section>
+      {/* Safari gallery */}
+<section className="bg-white px-5 py-24">
+  <div className="mx-auto max-w-7xl">
+    <div className="max-w-2xl">
+      <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#d9902f]">
+        From The Park ---
+      </p>
+
+      <h2 className="mt-4 text-4xl font-bold text-[#173f35] md:text-5xl">
+        Moments from {safari.name}
+      </h2>
+
+      <p className="mt-5 text-base leading-7 text-gray-600">
+        A closer look at the landscapes, wildlife and safari experience.
+      </p>
+    </div>
+
+    <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {safari.gallery.map((photo, index) => (
+        <article
+          key={photo}
+          className={`group relative overflow-hidden rounded-3xl bg-[#173f35] ${
+            index === 0 || index === 5
+              ? "min-h-[420px] lg:col-span-2"
+              : "min-h-[320px]"
+          }`}
+        >
+          <Image
+            src={photo}
+            alt={`${safari.name} wildlife photograph ${index + 1}`}
+            fill
+            sizes={
+              index === 0 || index === 5
+                ? "(max-width: 1024px) 100vw, 66vw"
+                : "(max-width: 640px) 100vw, 33vw"
+            }
+            className="object-cover transition duration-700 group-hover:scale-105"
+          />
+
+          <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />
+
+          <div className="absolute bottom-0 left-0 p-6 text-white">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#e7ad4a]">
+              Safari Moment {String(index + 1).padStart(2, "0")}
+            </p>
+
+            <h3 className="mt-2 text-xl font-bold">
+              {safari.location}
+            </h3>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <p className="mt-6 text-xs leading-5 text-gray-500">
+      Wildlife sightings and park conditions vary according to the season.
+    </p>
+  </div>
+</section>
 
       <Footer />
     </main>

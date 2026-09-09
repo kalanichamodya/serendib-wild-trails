@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
 type Destination = {
@@ -79,8 +80,10 @@ export default function Destinations() {
         {/* Destination cards */}
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {destinations.map((destination) => (
-            <article
+            <Link
               key={destination.id}
+              href={`/destinations/${destination.name.toLowerCase()}`}
+              aria-label={`View ${destination.name}`}
               className="group relative aspect-square overflow-hidden rounded-3xl"
             >
               <Image
@@ -102,13 +105,12 @@ export default function Destinations() {
               </span>
 
               {/* Arrow button */}
-              <a
-                href="#contact"
-                aria-label={`View ${destination.name}`}
+              <span
+                aria-hidden="true"
                 className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#173f35] transition group-hover:bg-[#d9902f] group-hover:text-white"
               >
                 <ArrowUpRight size={20} />
-              </a>
+              </span>
 
               {/* Card content */}
               <div className="absolute bottom-0 left-0 right-0 p-5 text-white md:p-6">
@@ -122,7 +124,7 @@ export default function Destinations() {
                   {destination.description}
                 </p>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </div>

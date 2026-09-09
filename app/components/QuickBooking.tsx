@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import styles from "./QuickBooking.module.css";
 
 export default function QuickBooking() {
   const [experience, setExperience] = useState("Jeep Safari");
@@ -43,7 +44,7 @@ export default function QuickBooking() {
                 id="experience"
                 value={experience}
                 onChange={(event) => setExperience(event.target.value)}
-                className="w-full appearance-none rounded-xl border border-[#d0c5b4] bg-white px-4 py-3.5 pr-10 text-[15px] text-[#2d2d2d] outline-none transition focus:border-[#c69a4b] focus:ring-2 focus:ring-[#c69a4b]/25"
+                className={styles.select}
               >
                 <option>Jeep Safari</option>
                 <option>Village Tour</option>
@@ -68,7 +69,7 @@ export default function QuickBooking() {
                 id="destination"
                 value={destination}
                 onChange={(event) => setDestination(event.target.value)}
-                className="w-full appearance-none rounded-xl border border-[#d0c5b4] bg-white px-4 py-3.5 pr-10 text-[15px] text-[#2d2d2d] outline-none transition focus:border-[#c69a4b] focus:ring-2 focus:ring-[#c69a4b]/25"
+                className={styles.select}
               >
                 <option>Minneriya National Park</option>
                 <option>Kaudulla National Park</option>

@@ -8,7 +8,7 @@ const smallGalleryItems = [
     category: "Village Life",
     name: "Habarana",
     image: "/images/village-tour.png",
-    link: "/village-tour",
+    link: "/destinations/habarana",
   },
   {
     id: "04",

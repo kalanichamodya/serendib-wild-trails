@@ -1,0 +1,79 @@
+.select {
+  width: 100%;
+  appearance: none;
+  border: 1px solid #c69a4b80;
+  border-radius: 12px;
+  background: #fffdf8;
+  padding: 14px 40px 14px 16px;
+  color: #2f3f1e;
+  font-size: 15px;
+  cursor: pointer;
+  transition: border-color 180ms, box-shadow 180ms;
+}
+
+.select:hover {
+  border-color: #c69a4b;
+}
+
+.select:focus-visible {
+  outline: 2px solid #c69a4b;
+  outline-offset: 3px;
+}
+
+.select option {
+  background: #fffdf8;
+  color: #2f3f1e;
+}
+
+@supports (appearance: base-select) {
+  .select,
+  .select::picker(select) {
+    appearance: base-select;
+  }
+
+  .select {
+    padding-right: 16px;
+    align-items: center;
+  }
+
+  .select + span {
+    display: none;
+  }
+
+  .select::picker-icon {
+    content: "\25BE";
+    color: #c69a4b;
+    rotate: none;
+  }
+
+  .select::picker(select) {
+    margin-top: 8px;
+    padding: 6px;
+    border: 1px solid #c69a4b66;
+    border-radius: 14px;
+    background: #fffdf8;
+    box-shadow: 0 12px 28px #2f3f1e26;
+  }
+
+  .select option {
+    gap: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .select option:hover,
+  .select option:focus {
+    background: #f3e9d6;
+    outline: none;
+  }
+
+  .select option:checked {
+    background: #2f3f1e;
+    color: #fffdf8;
+  }
+
+  .select option::checkmark {
+    color: #e0b566;
+  }
+}

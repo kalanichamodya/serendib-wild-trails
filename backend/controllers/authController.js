@@ -126,9 +126,16 @@ const refreshAccessToken = async (req, res) => {
     res.cookie("refreshToken", newRefreshToken, refreshCookieOptions);
 
     return res.status(200).json({
-      success: true,
-      accessToken: newAccessToken,
-    });
+  success: true,
+  accessToken: newAccessToken,
+  admin: {
+    id: admin._id,
+    name: admin.name,
+    email: admin.email,
+    role: admin.role,
+  },
+});
+
   } catch (error) {
     res.clearCookie("refreshToken", {
       ...refreshCookieOptions,
@@ -187,9 +194,22 @@ const logoutAdmin = async (req, res) => {
   }
 };
 
+// GET /api/auth/me
+const getCurrentAdmin = async (req, res) => {
+  return res.status(200).json({
+    success: true,
+    admin: {
+      id: req.admin._id,
+      name: req.admin.name,
+      email: req.admin.email,
+      role: req.admin.role,
+    },
+  });
+};
 
 module.exports = {
   loginAdmin,
   refreshAccessToken,
   logoutAdmin,
+  getCurrentAdmin,
 };

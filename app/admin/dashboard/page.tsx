@@ -22,28 +22,29 @@ export default function AdminDashboardPage() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { admin, isAuthenticated, loading } = useSelector(
-    (state: RootState) => state.auth
+  const { admin, isAuthenticated, loading, sessionChecked } = useSelector(
+  (state: RootState) => state.auth
   );
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.replace("/admin/login");
-    }
-  }, [isAuthenticated, router]);
+  if (sessionChecked && !isAuthenticated) {
+    router.replace("/admin/login");
+  }
+}, [sessionChecked, isAuthenticated, router]);
 
   const handleLogout = async () => {
     await dispatch(logoutAdmin());
     router.replace("/admin/login");
   };
-
-  if (!isAuthenticated) {
-    return (
-      <main className={styles.loadingPage}>
-        <p>Checking administrator access...</p>
-      </main>
-    );
-  }
+ 
+    if (!sessionChecked || !isAuthenticated) {
+  return (
+    <main className={styles.loadingPage}>
+      <p>Checking administrator access...</p>
+    </main>
+  );
+}
+   
 
   return (
     <main className={styles.dashboard}>

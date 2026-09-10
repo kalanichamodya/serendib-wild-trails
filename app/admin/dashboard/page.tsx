@@ -1,36 +1,139 @@
 "use client";
 
-import { useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../store/store";
-import { logoutAdmin } from "../../../store/features/authSlice";
+
+import {
+  logoutAdmin,
+  restoreAdminSession,
+} from "../../../store/features/authSlice";
+
 import styles from "./dashboard.module.css";
 
 const menuItems = [
-  { icon: "▦", label: "Dashboard", active: true },
-  { icon: "▣", label: "Bookings" },
-  { icon: "♙", label: "Safari Packages" },
-  { icon: "⌖", label: "Destinations" },
-  { icon: "✉", label: "Enquiries" },
-  { icon: "▤", label: "Website Content" },
-  { icon: "⚙", label: "Settings" },
+  {
+    icon: "▦",
+    label: "Dashboard",
+    href: "/admin/dashboard",
+    active: true,
+  },
+  {
+    icon: "▣",
+    label: "Bookings",
+    href: "/admin/bookings",
+  },
+  {
+    icon: "♙",
+    label: "Safari Packages",
+    href: "#",
+  },
+  {
+    icon: "⌖",
+    label: "Destinations",
+    href: "#",
+  },
+  {
+    icon: "✉",
+    label: "Enquiries",
+    href: "#",
+  },
+  {
+    icon: "▤",
+    label: "Website Content",
+    href: "#",
+  },
+  {
+    icon: "⚙",
+    label: "Settings",
+    href: "#",
+  },
 ];
 
 export default function AdminDashboardPage() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { admin, isAuthenticated, loading, sessionChecked } = useSelector(
-  (state: RootState) => state.auth
-  );
+  const {
+  admin,
+  accessToken,
+  isAuthenticated,
+  loading,
+  sessionChecked,
+} = useSelector((state: RootState) => state.auth);
+
+const [bookingStats, setBookingStats] = useState({
+  total: 0,
+  pending: 0,
+  confirmed: 0,
+  completed: 0,
+  cancelled: 0,
+});
 
   useEffect(() => {
   if (sessionChecked && !isAuthenticated) {
     router.replace("/admin/login");
   }
 }, [sessionChecked, isAuthenticated, router]);
+
+useEffect(() => {
+  if (!sessionChecked || !isAuthenticated || !accessToken) {
+    return;
+  }
+
+  const loadBookingStats = async () => {
+    try {
+      let currentToken = accessToken;
+
+      let response = await fetch(
+        "http://localhost:5000/api/bookings/stats",
+        {
+          headers: {
+            Authorization: `Bearer ${currentToken}`,
+          },
+          credentials: "include",
+        }
+      );
+
+      if (response.status === 401) {
+        const refreshResult = await dispatch(restoreAdminSession());
+
+        if (restoreAdminSession.fulfilled.match(refreshResult)) {
+          currentToken = refreshResult.payload.accessToken;
+
+          response = await fetch(
+            "http://localhost:5000/api/bookings/stats",
+            {
+              headers: {
+                Authorization: `Bearer ${currentToken}`,
+              },
+              credentials: "include",
+            }
+          );
+        }
+      }
+
+      if (!response.ok) {
+        throw new Error("Unable to load booking statistics");
+      }
+
+      const data = await response.json();
+      setBookingStats(data.stats);
+    } catch (error) {
+      console.error("Dashboard statistics error:", error);
+    }
+  };
+
+  loadBookingStats();
+}, [
+  sessionChecked,
+  isAuthenticated,
+  accessToken,
+  dispatch,
+]);
 
   const handleLogout = async () => {
     await dispatch(logoutAdmin());
@@ -45,7 +148,6 @@ export default function AdminDashboardPage() {
   );
 }
    
-
   return (
     <main className={styles.dashboard}>
       <aside className={styles.sidebar}>
@@ -59,6 +161,7 @@ export default function AdminDashboardPage() {
             className={styles.logo}
           />
 
+
           <div>
             <h2>Serendib</h2>
             <p>Wild Trails</p>
@@ -69,16 +172,17 @@ export default function AdminDashboardPage() {
           <p className={styles.menuTitle}>ADMIN MENU</p>
 
           {menuItems.map((item) => (
-            <button
-              key={item.label}
-              className={`${styles.menuItem} ${
-                item.active ? styles.activeMenu : ""
-              }`}
-            >
-              <span>{item.icon}</span>
-              {item.label}
-            </button>
-          ))}
+  <Link
+    key={item.label}
+    href={item.href}
+    className={`${styles.menuItem} ${
+      item.active ? styles.activeMenu : ""
+    }`}
+  >
+    <span>{item.icon}</span>
+    {item.label}
+  </Link>
+))}
         </nav>
 
         <button
@@ -133,8 +237,8 @@ export default function AdminDashboardPage() {
             <div className={styles.statIcon}>▣</div>
             <div>
               <p>Total Bookings</p>
-              <h3>0</h3>
-              <span>All safari bookings</span>
+                  <h3>{bookingStats.total}</h3>
+                  <span>All safari bookings</span>
             </div>
           </article>
 
@@ -142,8 +246,8 @@ export default function AdminDashboardPage() {
             <div className={styles.statIcon}>⌛</div>
             <div>
               <p>Pending Requests</p>
-              <h3>0</h3>
-              <span>Waiting for confirmation</span>
+                  <h3>{bookingStats.pending}</h3>
+                  <span>Waiting for confirmation</span>
             </div>
           </article>
 

@@ -239,6 +239,8 @@
     flex-direction: column;
   }
 
+
+  
   .toolbar {
     grid-template-columns: 1fr;
   }

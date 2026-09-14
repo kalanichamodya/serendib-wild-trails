@@ -42,6 +42,8 @@ const bookingSchema = new mongoose.Schema(
       type: Number,
       required: [true, "Guest count is required"],
       min: [1, "At least one guest is required"],
+      max: [30, "No more than 30 guests are allowed"],
+      validate: { validator: Number.isInteger, message: "Guest count must be an integer" },
     },
 
     message: {
@@ -61,6 +63,9 @@ const bookingSchema = new mongoose.Schema(
   }
 );
 
+bookingSchema.index({ createdAt: -1 });
+bookingSchema.index({ status: 1, createdAt: -1 });
+bookingSchema.index({ email: 1 });
 const Booking = mongoose.model("Booking", bookingSchema);
 
 module.exports = Booking;

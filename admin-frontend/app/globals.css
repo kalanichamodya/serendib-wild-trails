@@ -1,0 +1,18 @@
+:root { color-scheme: light; font-family: Arial, sans-serif; color: #173f35; background: #f8f5ee; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+button, input, select, textarea { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+button:disabled { cursor: wait; opacity: .65; }
+a { color: inherit; }
+.session-status { padding: 3rem; }
+.admin-shell { min-height: 100vh; display: grid; grid-template-columns: 240px minmax(0, 1fr); }
+.admin-sidebar { background: #173f35; color: white; padding: 28px; }
+.admin-sidebar p { font-size: 13px; opacity: .75; }
+.admin-sidebar nav { display: grid; gap: 12px; margin: 36px 0; }
+.admin-sidebar a { padding: 12px; border-radius: 8px; text-decoration: none; }
+.admin-sidebar a[aria-current], .admin-sidebar a:hover { background: #31584c; }
+.admin-sidebar button { border: 1px solid #b5c3b8; background: transparent; color: white; border-radius: 8px; padding: 12px 20px; }
+.admin-content { min-width: 0; }
+@media(max-width: 800px) { .admin-shell { display: block; } .admin-sidebar { padding: 16px; } .admin-sidebar h2, .admin-sidebar p { margin: 4px 0; } .admin-sidebar nav { display: flex; margin: 12px 0; } }

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { CarFront, Leaf, MapPin } from "lucide-react";
 
 export default function About() {
@@ -106,7 +107,9 @@ export default function About() {
         {/* Right side image */}
         <div className="relative flex rounded-[32px] border border-[#d8c9a9] bg-[#eee4d3] p-3 shadow-xl lg:self-stretch">
           <div className="relative min-h-[460px] w-full overflow-hidden rounded-[22px] sm:min-h-[570px] lg:min-h-[640px]">
-            <img
+            <Image
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
               src="/images/minneriya-elephants.webp"
               alt="Elephants travelling through a wildlife park"
               className="absolute inset-0 h-full w-full object-cover"

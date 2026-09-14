@@ -2,55 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
-type Destination = {
-  id: number;
-  name: string;
-  category: string;
-  description: string;
-  travelTime: string;
-  image: string;
-  featured?: boolean;
-};
-
-const destinations: Destination[] = [
-  {
-    id: 1,
-    name: "Sigiriya",
-    category: "Ancient Heritage",
-    description:
-      "Climb the legendary rock fortress and experience one of Sri Lanka's most remarkable ancient wonders.",
-    travelTime: "25 Minutes",
-    image: "/images/sigiriya.webp",
-    featured: true,
-  },
-  {
-    id: 2,
-    name: "Dambulla",
-    category: "Cave Temple",
-    description:
-      "Discover ancient cave paintings, statues and centuries of Sri Lankan history.",
-    travelTime: "30 Minutes",
-    image: "/images/dambulla.webp",
-  },
-  {
-    id: 3,
-    name: "Polonnaruwa",
-    category: "Ancient City",
-    description:
-      "Explore royal ruins, stone carvings and the remains of a historic kingdom.",
-    travelTime: "55 Minutes",
-    image: "/images/polonnaruwa.webp",
-  },
-  {
-    id: 4,
-    name: "Ritigala",
-    category: "Forest Monastery",
-    description:
-      "Walk through peaceful forest trails leading to an ancient Buddhist monastery.",
-    travelTime: "45 Minutes",
-    image: "/images/ritigala.webp",
-  },
-];
+import { destinationCards as destinations } from "../../lib/content/destinations";
 
 export default function Destinations() {
   return (
@@ -82,7 +34,7 @@ export default function Destinations() {
           {destinations.map((destination) => (
             <Link
               key={destination.id}
-              href={`/destinations/${destination.name.toLowerCase()}`}
+              href={`/destinations/${destination.slug}`}
               aria-label={`View ${destination.name}`}
               className="group relative aspect-square overflow-hidden rounded-3xl"
             >
@@ -100,7 +52,7 @@ export default function Destinations() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
 
               {/* Category */}
-              <span className="absolute left-5 top-5 rounded-full border border-white/30 bg-black/20 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md">
+              <span className="absolute left-5 right-20 top-5 rounded-full border border-white/30 bg-black/20 px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-white backdrop-blur-md">
                 {destination.category}
               </span>
 
@@ -121,7 +73,7 @@ export default function Destinations() {
                 <p
                   className="mt-2 max-w-lg text-sm leading-5 text-white/75"
                 >
-                  {destination.description}
+                  {destination.introduction}
                 </p>
               </div>
             </Link>

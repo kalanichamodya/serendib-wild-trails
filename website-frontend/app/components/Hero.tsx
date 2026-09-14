@@ -42,9 +42,7 @@ export default function Hero() {
           {/* Buttons */}
           <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
             <a
-              href="https://wa.me/94762801972"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/booking"
               className="rounded-full bg-[#c69a4b] px-7 py-4 text-center font-semibold text-white transition hover:bg-[#a97c32]"
             >
               Book a Safari →
@@ -69,7 +67,6 @@ export default function Hero() {
           <div className="mt-9 flex flex-wrap gap-x-7 gap-y-3 text-sm font-medium text-white">
             <span>✓ Local knowledge</span>
             <span>✓ Private journeys</span>
-            <span>✓ Google reviews</span>
           </div>
         </div>
       </div>

@@ -11,84 +11,9 @@ import {
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 
-type SafariRoute = {
-  id: number;
-  name: string;
-  description: string;
-  duration: string;
-  bestFor: string;
-  image: string;
-  link: string;
-  features: string[];
-};
-
-const safariRoutes: SafariRoute[] = [
- {
-  id: 1,
-  name: "Minneriya Safari",
-  description:
-    "Explore reservoir landscapes and observe seasonal gatherings of Sri Lanka's wild elephants in their natural environment.",
-  duration: "3 - 4 Hours",
-  bestFor: "Elephants & Birdlife",
-  image: "/images/minneriya-elephants.webp",
-  link: "/safaris/minneriya",
-  features: [
-    "Private safari jeep",
-    "Convenient hotel pickup",
-    "Experienced driver",
-  ],
-},
-  {
-    id: 2,
-    name: "Kaudulla Safari",
-    description:
-      "Journey across open plains and forest trails while discovering elephants, deer and native bird species.",
-    duration: "3–4 Hours",
-    bestFor: "Wildlife Photography",
-    image: "/images/kaudulla-safari.webp",
-    link: "/safaris/kaudulla",
-    features: [
-      "Private safari jeep",
-      "Flexible departure time",
-      "Seasonal route guidance",
-    ],
-  },
-  {
-    id: 3,
-    name: "Hurulu Eco Safari",
-    description:
-      "Travel through dry evergreen forests and discover diverse wildlife in a peaceful eco-park environment.",
-    duration: "3 Hours",
-    bestFor: "Nature & Adventure",
-    image: "/images/hurulu-eco-park.webp",
-    link: "/safaris/hurulu",
-    features: [
-      "Private safari jeep",
-      "Forest wildlife route",
-      "Convenient pickup",
-    ],
-  },
-  {
-    id: 4,
-    name: "Gal Oya Safari",
-    description:
-      "Experience scenic wilderness, peaceful landscapes and memorable wildlife encounters in a remarkable national park.",
-    duration: "4–5 Hours",
-    bestFor: "Scenery & Wildlife",
-    image: "/images/gal-oya-safari.webp",
-    link: "/safaris/gal-oya",
-    features: [
-      "Private safari journey",
-      "Scenic nature route",
-      "Personalised experience",
-    ],
-  },
-];
+import { safaris as safariRoutes } from "../../lib/content/safaris";
 
 export default function SafarisPage() {
-  const whatsappMessage = encodeURIComponent(
-    "Hello, I would like help choosing a suitable safari route."
-  );
 
   return (
     <main>
@@ -254,13 +179,11 @@ export default function SafarisPage() {
           </div>
 
           <a
-            href={`https://wa.me/94762801972?text=${whatsappMessage}`}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/booking"
             className="inline-flex shrink-0 items-center justify-center gap-3 rounded-full bg-[#d9902f] px-7 py-4 font-semibold text-white transition hover:bg-[#b87420]"
           >
             <MessageCircle size={20} />
-            Ask on WhatsApp
+            Request a booking
           </a>
         </div>
       </section>

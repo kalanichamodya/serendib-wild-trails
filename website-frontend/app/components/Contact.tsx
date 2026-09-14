@@ -1,8 +1,9 @@
+import { site, whatsappUrl } from "../../lib/site";
 import Image from "next/image";
 import { ArrowRight, MapPin, MessageCircle, Phone } from "lucide-react";
 
 export default function Contact() {
-  const whatsappMessage = encodeURIComponent(
+  const whatsappMessage = (
     "Hello, I would like to plan a Sri Lankan safari experience."
   );
 
@@ -58,7 +59,7 @@ export default function Contact() {
               <div className="mt-3 grid gap-2">
                 {/* WhatsApp */}
                 <a
-                  href={`https://wa.me/94762801972?text=${whatsappMessage}`}
+                  href={whatsappUrl(whatsappMessage)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group flex items-center justify-between rounded-lg bg-[#173f35] px-3 py-2 text-white transition hover:bg-[#245b4c]"
@@ -73,7 +74,7 @@ export default function Contact() {
                         Message on WhatsApp
                       </p>
 
-                      <p className="mt-1 font-bold">+94 76 280 1972</p>
+                      <p className="mt-1 font-bold">{site.phoneLabel}</p>
                     </div>
                   </div>
 
@@ -85,7 +86,7 @@ export default function Contact() {
 
                 {/* Phone call */}
                 <a
-                  href="tel:+94767632044"
+                  href={`tel:${site.phone}`}
                   className="group flex items-center justify-between rounded-lg border border-[#d9d0c0] bg-white px-3 py-2 text-[#173f35] transition hover:border-[#d9902f]"
                 >
                   <div className="flex items-center gap-4">
@@ -98,7 +99,7 @@ export default function Contact() {
                         Call for assistance
                       </p>
 
-                      <p className="mt-1 font-bold">+94 76 763 2044</p>
+                      <p className="mt-1 font-bold">{site.phoneLabel}</p>
                     </div>
                   </div>
 

@@ -6,7 +6,6 @@ import SafariSection from "./components/SafariSection";
 import VillageTour from "./components/VillageTour";
 import Destinations from "./components/Destinations";
 import Gallery from "./components/Gallery";
-import Testimonials from "./components/Testimonials";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
@@ -22,7 +21,6 @@ export default function Home() {
         <VillageTour />
         <Destinations />
         <Gallery />
-        <Testimonials />
         <Contact />
         <Footer />
       </div>

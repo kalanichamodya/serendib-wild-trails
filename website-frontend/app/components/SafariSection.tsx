@@ -8,53 +8,7 @@ import {
   MapPinned,
 } from "lucide-react";
 
-type Safari = {
-  id: number;
-  name: string;
-  description: string;
-  duration: string;
-  bestFor: string;
-  image: string;
-};
-
-const safaris: Safari[] = [
-  {
-    id: 1,
-    name: "Minneriya Safari",
-    description:
-      "Explore reservoir landscapes and seasonal gatherings of wild elephants.",
-    duration: "3 - 4 Hours",
-    bestFor: "Elephants",
-    image: "/images/minneriya-elephants.webp",
-  },
-  {
-    id: 2,
-    name: "Kaudulla Safari",
-    description:
-      "Journey through peaceful forest trails filled with elephants and native birds.",
-    duration: "3 - 4 Hours",
-    bestFor: "Photography",
-    image: "/images/kaudulla-safari.webp",
-  },
-  {
-    id: 3,
-    name: "Hurulu Eco Safari",
-    description:
-      "Discover dry forests, natural lakes and Sri Lanka's diverse wildlife.",
-    duration: "3 Hours",
-    bestFor: "Adventure",
-    image: "/images/hurulu-eco-park.webp",
-  },
-  {
-    id: 4,
-    name: "Gal Oya Safari",
-    description:
-      "Enjoy remarkable scenery and wildlife encounters in a peaceful national park.",
-    duration: "4–5 Hours",
-    bestFor: "Nature",
-    image: "/images/gal-oya-safari.webp",
-  },
-];
+import { safaris } from "../../lib/content/safaris";
 
 export default function SafariSection() {
   return (
@@ -210,11 +164,7 @@ export default function SafariSection() {
                 </div>
 
                 <a
-                  href={`https://wa.me/94774639048?text=${encodeURIComponent(
-                    `Hello, I would like to know more about the ${safari.name}.`
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={safari.link}
                   className="mt-5 flex w-full items-center justify-between rounded-xl border border-[#d9902f] bg-[#d9902f] px-4 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white transition hover:bg-[#b87420]"
                 >
                   <span>View Route Details</span>

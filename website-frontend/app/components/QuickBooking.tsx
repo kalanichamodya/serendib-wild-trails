@@ -1,17 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { safaris } from "../../lib/content/safaris";
+import { destinationCards } from "../../lib/content/destinations";
 import styles from "./QuickBooking.module.css";
 
 export default function QuickBooking() {
   const [experience, setExperience] = useState("Jeep Safari");
   const [destination, setDestination] = useState("Minneriya National Park");
 
-  const message = `Hello, I would like to book a ${experience} to ${destination}.`;
-
-  const whatsappLink = `https://wa.me/94762801972?text=${encodeURIComponent(
-    message
-  )}`;
+  const bookingLink = `/booking?${new URLSearchParams({ experience, destination })}`;
 
   return (
     <section className="relative z-20 mx-auto -mb-16 w-full max-w-[1180px] -translate-y-1/4 px-5">
@@ -71,10 +69,8 @@ export default function QuickBooking() {
                 onChange={(event) => setDestination(event.target.value)}
                 className={styles.select}
               >
-                <option>Minneriya National Park</option>
-                <option>Kaudulla National Park</option>
-                <option>Hurulu Eco Park</option>
-                <option>Gal Oya National Park</option>
+                {safaris.map(safari => <option key={safari.location}>{safari.location}</option>)}
+                {destinationCards.map(destination => <option key={destination.name}>{destination.name}</option>)}
               </select>
               <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xl text-[#2b2d2b]">
                 ▾
@@ -85,16 +81,14 @@ export default function QuickBooking() {
 
         <div className="flex flex-col justify-center bg-[#f3efe9] p-5 md:p-6">
           <a
-            href={whatsappLink}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={bookingLink}
             className="whitespace-nowrap rounded-full bg-[#c69a4b] px-6 py-4 text-center text-[1.1rem] font-semibold text-white shadow-sm transition hover:bg-[#a97c32]"
           >
             Check Availability →
           </a>
 
           <p className="mt-3 text-center text-[12px] text-[#5c5a57]">
-            Instant reply on WhatsApp
+            Send your booking request
           </p>
         </div>
       </div>

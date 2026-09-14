@@ -7,10 +7,11 @@ const {
 } = require("../controllers/authController");
 
 const protectAdmin = require("../middleware/authMiddleware");
+const { loginLimiter } = require("../middleware/rateLimits");
 
 const router = express.Router();
 
-router.post("/login", loginAdmin);
+router.post("/login", loginLimiter, loginAdmin);
 
 router.all("/login", (req, res) => {
   res.set("Allow", "POST").status(405).json({

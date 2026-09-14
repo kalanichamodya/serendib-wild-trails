@@ -1,4 +1,8 @@
-﻿"use client";
+"use client";
+
+import Link from "next/link";
+import { site } from "../../lib/site";
+
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
@@ -11,7 +15,6 @@ const links = [
   { id: "village", label: "Village Tour" },
   { id: "destinations", label: "Destinations" },
   { id: "gallery", label: "Gallery" },
-  { id: "reviews", label: "Reviews" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -66,7 +69,7 @@ export default function Navbar() {
   }, []);
 
   const renderLinks = (mobile = false) => links.map(({ id, label }) => (
-    <a
+    <Link
       key={id}
       href={`/#${id}`}
       aria-current={activeSection === id ? "location" : undefined}
@@ -75,7 +78,7 @@ export default function Navbar() {
     >
       {label}
       {activeSection === id && !mobile && <span className="absolute inset-x-3 bottom-1 h-0.5 rounded-full bg-[#d9902f]" />}
-    </a>
+    </Link>
   ));
 
   return (
@@ -84,14 +87,13 @@ export default function Navbar() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-2 text-xs sm:text-sm">
           <p className="flex items-center gap-2"><MapPin size={14} aria-hidden="true" /> Habarana, Sri Lanka</p>
           <div className="hidden gap-5 sm:flex">
-            <a href="tel:+94762801972" className="transition-colors hover:text-[#efbf78]">+94 76 280 1972</a>
-            <a href="tel:+94767632044" className="transition-colors hover:text-[#efbf78]">+94 76 7632044</a>
+            <Link href={`tel:${site.phone}`} className="transition-colors hover:text-[#efbf78]">{site.phoneLabel}</Link>
           </div>
         </div>
       </div>
       <header className="sticky top-0 z-50 border-b border-[#173f35]/10 bg-[#fffdf8]/95 shadow-[0_4px_24px_rgba(23,63,53,0.05)] backdrop-blur-md">
         <nav ref={navRef} aria-label="Main navigation" className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-5 py-4">
-          <a href="/#home" onClick={() => { setActiveSection("home"); setMenuOpen(false); }} className="flex shrink-0 items-center gap-2.5 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d9902f]">
+          <Link href="/#home" onClick={() => { setActiveSection("home"); setMenuOpen(false); }} className="flex shrink-0 items-center gap-2.5 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d9902f]">
             <Image
               src="/images/safari-logo-transparent.png"
               alt="Safari Travel elephant logo"
@@ -105,11 +107,11 @@ export default function Navbar() {
               Serendib Wild Trails
               <span className="mt-1 block text-[8px] font-semibold tracking-[0.2em] text-[#a46116] sm:text-[9px]">SAFARI &amp; EXPERIENCES</span>
             </span>
-          </a>
+          </Link>
           <div className="hidden items-center gap-0.5 lg:flex">{renderLinks()}</div>
-          <a href="https://wa.me/94762801972" target="_blank" rel="noopener noreferrer" className="hidden shrink-0 items-center gap-2 rounded-full bg-[#d9902f] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#b87420] lg:flex xl:px-5">
+          <Link href="/booking" className="hidden shrink-0 items-center gap-2 rounded-full bg-[#d9902f] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#b87420] lg:flex xl:px-5">
             Book Now <ArrowUpRight size={16} aria-hidden="true" />
-          </a>
+          </Link>
           <button type="button" className="rounded-xl border border-[#173f35]/15 p-2.5 text-[#173f35] transition-colors hover:bg-[#173f35]/5 lg:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={menuOpen} aria-controls="mobile-navigation">
             {menuOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
           </button>
@@ -118,7 +120,7 @@ export default function Navbar() {
           <nav id="mobile-navigation" aria-label="Mobile navigation" className="max-h-[calc(100dvh-90px)] overflow-y-auto border-t border-[#173f35]/10 bg-[#fffdf8] px-5 py-4 lg:hidden">
             <div className="flex flex-col gap-1">
               {renderLinks(true)}
-              <a href="https://wa.me/94767632044" target="_blank" rel="noopener noreferrer" className="mt-3 rounded-full bg-[#c69a4b] px-5 py-3 text-center font-semibold text-white">Book Now</a>
+              <Link href="/booking" className="mt-3 rounded-full bg-[#c69a4b] px-5 py-3 text-center font-semibold text-white">Book Now</Link>
             </div>
           </nav>
         )}

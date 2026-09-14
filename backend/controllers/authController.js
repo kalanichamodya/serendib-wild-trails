@@ -21,9 +21,9 @@ const refreshCookieOptions = {
 // POST /api/auth/login
 const loginAdmin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body || {};
 
-    if (!email || !password) {
+    if (typeof email !== "string" || typeof password !== "string" || !email.trim() || !password || email.length > 254 || password.length > 1024) {
       return res.status(400).json({
         success: false,
         message: "Email and password are required",

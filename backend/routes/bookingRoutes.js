@@ -10,11 +10,13 @@ const {
 } = require("../controllers/bookingController");
 
 const protectAdmin = require("../middleware/authMiddleware");
+const { bookingLimiter } = require("../middleware/rateLimits");
+const { bookingValidator } = require("../validators/bookingValidator");
 
 const router = express.Router();
 
 // Public route – customer can submit a booking
-router.post("/", createBooking);
+router.post("/", bookingLimiter, bookingValidator, createBooking);
 
 // Protected admin routes
 router.get("/", protectAdmin, getAllBookings);

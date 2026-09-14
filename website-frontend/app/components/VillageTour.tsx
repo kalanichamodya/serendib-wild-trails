@@ -109,7 +109,7 @@ export default function VillageTour() {
             </div>
 
             <Link
-              href="/village-tour"
+              href="/booking?experience=Village%20Tour&destination=Habarana"
               className="inline-flex items-center justify-center gap-3 rounded-full bg-[#d9902f] px-7 py-4 font-semibold text-white transition hover:bg-[#b87420]"
             >
               Plan Village Tour

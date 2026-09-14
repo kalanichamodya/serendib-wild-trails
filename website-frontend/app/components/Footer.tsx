@@ -1,3 +1,4 @@
+import { site } from "../../lib/site";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -10,9 +11,6 @@ import {
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
-  const whatsappMessage = encodeURIComponent(
-    "Hello, I would like to know more about your Sri Lankan travel experiences."
-  );
 
   return (
     <footer className="bg-[#0d2b24] text-white">
@@ -20,7 +18,7 @@ export default function Footer() {
       <div className="mx-auto grid max-w-7xl gap-12 px-5 py-16 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
         {/* Brand */}
         <div>
-          <Link href="#home" className="inline-block">
+          <Link href="/#home" className="inline-block">
             <Image
               src="/images/safari-logo-transparent.png"
               alt="Safari Travel elephant logo"
@@ -55,23 +53,19 @@ export default function Footer() {
           </h2>
 
           <nav className="mt-6 flex flex-col gap-4 text-sm text-white/65">
-            <Link href="#home" className="transition hover:text-white">
+            <Link href="/#home" className="transition hover:text-white">
               Home
             </Link>
 
-            <Link href="#about" className="transition hover:text-white">
+            <Link href="/#about" className="transition hover:text-white">
               About Us
             </Link>
 
-            <Link href="#gallery" className="transition hover:text-white">
+            <Link href="/#gallery" className="transition hover:text-white">
               Gallery
             </Link>
 
-            <Link href="#reviews" className="transition hover:text-white">
-              Testimonials
-            </Link>
-
-            <Link href="#contact" className="transition hover:text-white">
+            <Link href="/#contact" className="transition hover:text-white">
               Contact
             </Link>
           </nav>
@@ -98,7 +92,7 @@ export default function Footer() {
               Kaudulla Safari
             </Link>
 
-            <Link href="/village-tour" className="transition hover:text-white">
+            <Link href="/#village" className="transition hover:text-white">
               Village Experience
             </Link>
 
@@ -127,9 +121,7 @@ export default function Footer() {
           <div className="mt-6 space-y-5">
             {/* WhatsApp */}
             <a
-              href={`https://wa.me/94762801972?text=${whatsappMessage}`}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/booking"
               className="group flex items-center gap-4"
             >
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-[#e7ad4a] transition group-hover:bg-[#d9902f] group-hover:text-white">
@@ -137,17 +129,17 @@ export default function Footer() {
               </span>
 
               <div>
-                <p className="text-xs text-white/45">WhatsApp</p>
+                <p className="text-xs text-white/45">Plan your journey</p>
 
                 <p className="mt-1 text-sm font-semibold text-white/80 group-hover:text-white">
-                  +94 76 280 1972
+                  Send a booking request
                 </p>
               </div>
             </a>
 
             {/* Phone */}
             <a
-              href="tel:+94767632044"
+              href={`tel:${site.phone}`}
               className="group flex items-center gap-4"
             >
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-[#e7ad4a] transition group-hover:bg-[#d9902f] group-hover:text-white">
@@ -158,7 +150,7 @@ export default function Footer() {
                 <p className="text-xs text-white/45">Call Us</p>
 
                 <p className="mt-1 text-sm font-semibold text-white/80 group-hover:text-white">
-                  +94 76 763 2044
+                  {site.phoneLabel}
                 </p>
               </div>
             </a>
@@ -166,12 +158,10 @@ export default function Footer() {
 
           {/* Main WhatsApp button */}
           <a
-            href={`https://wa.me/94762801972?text=${whatsappMessage}`}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/booking"
             className="mt-7 inline-flex rounded-full bg-[#d9902f] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#b87420]"
           >
-            Start a Conversation →
+            Request a booking →
           </a>
         </div>
       </div>
@@ -184,17 +174,10 @@ export default function Footer() {
           </p>
 
           <div className="flex items-center gap-6">
-            <Link href="/privacy" className="transition hover:text-white">
-              Privacy Policy
-            </Link>
-
-            <Link href="/terms" className="transition hover:text-white">
-              Terms & Conditions
-            </Link>
 
             {/* Back to top */}
             <Link
-              href="#home"
+              href="/#home"
               aria-label="Return to top of page"
               className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white transition hover:border-[#d9902f] hover:bg-[#d9902f]"
             >

@@ -1,7 +1,11 @@
 "use client";
 
+import { apiUrl } from "../../lib/api";
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { FormEvent, Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { safaris } from "../../lib/content/safaris";
+import { destinationCards } from "../../lib/content/destinations";
 import styles from "./booking.module.css";
 
 const initialForm = {
@@ -15,8 +19,15 @@ const initialForm = {
   message: "",
 };
 
-export default function BookingPage() {
-  const [form, setForm] = useState(initialForm);
+const destinationOptions = [...safaris.map(safari => safari.location), ...destinationCards.map(destination => destination.name)];
+
+function BookingForm() {
+  const params = useSearchParams();
+  const [form, setForm] = useState(() => ({
+    ...initialForm,
+    experience: ["Jeep Safari", "Village Tour", "Cultural Tour"].includes(params.get("experience") || "") ? params.get("experience")! : initialForm.experience,
+    destination: destinationOptions.includes(params.get("destination") || "") ? params.get("destination")! : initialForm.destination,
+  }));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -47,7 +58,7 @@ export default function BookingPage() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/bookings",
+        apiUrl("/api/bookings"),
         {
           method: "POST",
           headers: {
@@ -81,7 +92,7 @@ export default function BookingPage() {
     }
   };
 
-  const minimumDate = new Date().toISOString().split("T")[0];
+  const minimumDate = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Colombo", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
 
   return (
     <main className={styles.page}>
@@ -127,11 +138,11 @@ export default function BookingPage() {
           </div>
 
           {error && (
-            <div className={styles.errorMessage}>{error}</div>
+            <div className={styles.errorMessage} role="alert">{error}</div>
           )}
 
           {success && (
-            <div className={styles.successMessage}>{success}</div>
+            <div className={styles.successMessage} role="status">{success}</div>
           )}
 
           <form className={styles.form} onSubmit={handleSubmit}>
@@ -142,6 +153,7 @@ export default function BookingPage() {
                   id="customerName"
                   name="customerName"
                   type="text"
+                  maxLength={120}
                   value={form.customerName}
                   onChange={updateField}
                   placeholder="Enter your full name"
@@ -155,6 +167,7 @@ export default function BookingPage() {
                   id="phone"
                   name="phone"
                   type="tel"
+                  maxLength={40}
                   value={form.phone}
                   onChange={updateField}
                   placeholder="+94 77 123 4567"
@@ -169,6 +182,7 @@ export default function BookingPage() {
                 id="email"
                 name="email"
                 type="email"
+                maxLength={254}
                 value={form.email}
                 onChange={updateField}
                 placeholder="example@email.com"
@@ -201,12 +215,7 @@ export default function BookingPage() {
                   onChange={updateField}
                   required
                 >
-                  <option>Minneriya National Park</option>
-                  <option>Kaudulla National Park</option>
-                  <option>Hurulu Eco Park</option>
-                  <option>Gal Oya National Park</option>
-                  <option>Sigiriya</option>
-                  <option>Polonnaruwa</option>
+                  {destinationOptions.map(destination => <option key={destination}>{destination}</option>)}
                 </select>
               </div>
             </div>
@@ -270,13 +279,11 @@ export default function BookingPage() {
           <div className={styles.contactOption}>
   <span>Need help before booking?</span>
 
-  <a
-    href="https://wa.me/94762801972?text=Hello%2C%20I%20would%20like%20to%20ask%20about%20a%20safari%20booking."
-    target="_blank"
-    rel="noopener noreferrer"
+  <Link
+    href="/#contact"
   >
-    Chat with us on WhatsApp
-  </a>
+    Contact our team
+  </Link>
 </div>
 
           <p className={styles.note}>
@@ -286,4 +293,8 @@ export default function BookingPage() {
       </section>
     </main>
   );
+}
+
+export default function BookingPage() {
+  return <Suspense fallback={<main style={{ padding: "3rem" }}>Loading booking form...</main>}><BookingForm /></Suspense>;
 }

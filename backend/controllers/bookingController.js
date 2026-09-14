@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Booking = require("../models/Booking");
+const escapeRegex = value => value.slice(0, 80).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 // POST /api/bookings
 // Public customer booking creation
@@ -81,7 +82,11 @@ const createBooking = async (req, res) => {
 // Protected admin booking list
 const getAllBookings = async (req, res) => {
   try {
-    const { status, search } = req.query;
+    const { status, search, limit } = req.query;
+
+    if ((status !== undefined && (typeof status !== "string" || !["all", "pending", "confirmed", "completed", "cancelled"].includes(status))) || (search !== undefined && typeof search !== "string") || (limit !== undefined && (typeof limit !== "string" || !/^\d+$/.test(limit) || Number(limit) < 1 || Number(limit) > 100))) {
+      return res.status(400).json({ success: false, message: "Invalid booking filters" });
+    }
 
     const filter = {};
 
@@ -90,15 +95,18 @@ const getAllBookings = async (req, res) => {
     }
 
     if (search) {
+      const safeSearch = escapeRegex(search);
       filter.$or = [
-        { customerName: { $regex: search, $options: "i" } },
-        { email: { $regex: search, $options: "i" } },
-        { phone: { $regex: search, $options: "i" } },
-        { destination: { $regex: search, $options: "i" } },
+        { customerName: { $regex: safeSearch, $options: "i" } },
+        { email: { $regex: safeSearch, $options: "i" } },
+        { phone: { $regex: safeSearch, $options: "i" } },
+        { destination: { $regex: safeSearch, $options: "i" } },
       ];
     }
 
-    const bookings = await Booking.find(filter).sort({ createdAt: -1 });
+    const query = Booking.find(filter).sort({ createdAt: -1 });
+    if (limit) query.limit(Number(limit));
+    const bookings = await query;
 
     return res.status(200).json({
       success: true,

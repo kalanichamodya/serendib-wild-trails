@@ -1,8 +1,7 @@
-const dotenv = require("dotenv");
-const connectDB = require("../config/db");
-const Admin = require("../models/Admin");
-
-dotenv.config();
+import "dotenv/config";
+import messages = require("../utils/messages");
+import connectDB = require("../config/db");
+import Admin = require("../models/Admin");
 
 const seedAdmin = async () => {
   try {
@@ -14,7 +13,7 @@ const seedAdmin = async () => {
 
     if (!name || !email || !password) {
       throw new Error(
-        "ADMIN_NAME, ADMIN_EMAIL and ADMIN_PASSWORD must be added to the .env file"
+        messages.config.adminEnvRequired
       );
     }
 
@@ -39,7 +38,7 @@ const seedAdmin = async () => {
 
     process.exit(0);
   } catch (error) {
-    console.error(`Admin creation failed: ${error.message}`);
+    console.error(`Admin creation failed: ${error instanceof Error ? error.message : String(error)}`);
     process.exit(1);
   }
 };

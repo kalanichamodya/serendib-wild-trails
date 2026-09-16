@@ -1,7 +1,9 @@
-const jwt = require("jsonwebtoken");
-const Admin = require("../models/Admin");
+import messages = require("../utils/messages");
+import jwt from "jsonwebtoken";
+import type { RequestHandler } from "express";
+import Admin = require("../models/Admin");
 
-const protectAdmin = async (req, res, next) => {
+const protectAdmin: RequestHandler = async (req, res, next) => {
   try {
     const authorizationHeader = req.headers.authorization;
 
@@ -11,7 +13,7 @@ const protectAdmin = async (req, res, next) => {
     ) {
       return res.status(401).json({
         success: false,
-               message: "Access token is missing",
+               message: messages.auth.accessMissing,
       });
     }
 
@@ -19,40 +21,41 @@ const protectAdmin = async (req, res, next) => {
 
     const decoded = jwt.verify(
       accessToken,
-      process.env.JWT_ACCESS_SECRET
+      process.env.JWT_ACCESS_SECRET!
     );
 
-    if (decoded.role !== "admin") {
+    if (typeof decoded === "string" || decoded.role !== "admin") {
       return res.status(403).json({
         success: false,
-               message: "Admin access is required",
+               message: messages.auth.adminRequired,
       });
     }
 
+    if (typeof decoded.adminId !== "string") throw new Error(messages.auth.accessPayloadInvalid);
     const admin = await Admin.findById(decoded.adminId);
 
     if (!admin) {
       return res.status(401).json({
         success: false,
-               message: "Admin account was not found",
+               message: messages.auth.adminNotFound,
       });
     }
 
     req.admin = admin;
     next();
   } catch (error) {
-    if (error.name === "TokenExpiredError") {
+    if (error instanceof jwt.TokenExpiredError) {
       return res.status(401).json({
         success: false,
-        message: "Access token has expired",
+        message: messages.auth.accessExpired,
       });
     }
 
     return res.status(401).json({
       success: false,
-      message: "Invalid access token",
+      message: messages.auth.accessInvalid,
     });
   }
 };
 
-module.exports = protectAdmin;
+export = protectAdmin;

@@ -1,13 +1,14 @@
-const express = require("express");
-const {
+import messages = require("../utils/messages");
+import express from "express";
+import {
   loginAdmin,
   refreshAccessToken,
   logoutAdmin,
   getCurrentAdmin,
-} = require("../controllers/authController");
+} from "../controllers/authController";
 
-const protectAdmin = require("../middleware/authMiddleware");
-const { loginLimiter } = require("../middleware/rateLimits");
+import protectAdmin = require("../middleware/authMiddleware");
+import { loginLimiter } from "../middleware/rateLimits";
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ router.all("/login", (req, res) => {
   res.set("Allow", "POST").status(405).json({
     success: false,
     message:
-      "Use POST /api/auth/login with email and password in the JSON body",
+      messages.auth.loginMethod,
   });
 });
 
@@ -27,4 +28,4 @@ router.post("/logout", logoutAdmin);
 // Protected admin route
 router.get("/me", protectAdmin, getCurrentAdmin);
 
-module.exports = router;
+export = router;

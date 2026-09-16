@@ -1,55 +1,56 @@
-const mongoose = require("mongoose");
+import messages = require("../utils/messages");
+import mongoose from "mongoose";
 
 const bookingSchema = new mongoose.Schema(
   {
     customerName: {
       type: String,
-      required: [true, "Customer name is required"],
+      required: [true, messages.validation.customerNameRequired],
       trim: true,
     },
 
     email: {
       type: String,
-      required: [true, "Email is required"],
+      required: [true, messages.validation.emailRequired],
       lowercase: true,
       trim: true,
     },
 
     phone: {
       type: String,
-      required: [true, "Phone number is required"],
+      required: [true, messages.validation.phoneRequired],
       trim: true,
     },
 
     experience: {
       type: String,
-      required: [true, "Experience is required"],
+      required: [true, messages.validation.experienceRequired],
       enum: ["Jeep Safari", "Village Tour", "Cultural Tour"],
     },
 
     destination: {
       type: String,
-      required: [true, "Destination is required"],
+      required: [true, messages.validation.destinationRequired],
       trim: true,
     },
 
     travelDate: {
       type: Date,
-      required: [true, "Travel date is required"],
+      required: [true, messages.validation.travelDateRequired],
     },
 
     guestCount: {
       type: Number,
-      required: [true, "Guest count is required"],
-      min: [1, "At least one guest is required"],
-      max: [30, "No more than 30 guests are allowed"],
-      validate: { validator: Number.isInteger, message: "Guest count must be an integer" },
+      required: [true, messages.validation.guestCountRequired],
+      min: [1, messages.validation.guestsMinimum],
+      max: [30, messages.validation.guestsMaximum],
+      validate: { validator: Number.isInteger, message: messages.validation.guestsInteger },
     },
 
     message: {
       type: String,
       trim: true,
-      maxlength: [1000, "Message cannot exceed 1000 characters"],
+      maxlength: [1000, messages.validation.messageTooLong],
     },
 
     status: {
@@ -68,4 +69,4 @@ bookingSchema.index({ status: 1, createdAt: -1 });
 bookingSchema.index({ email: 1 });
 const Booking = mongoose.model("Booking", bookingSchema);
 
-module.exports = Booking;
+export = Booking;

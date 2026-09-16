@@ -1,10 +1,12 @@
-const mongoose = require("mongoose");
-const Booking = require("../models/Booking");
-const escapeRegex = value => value.slice(0, 80).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+import messages = require("../utils/messages");
+import mongoose from "mongoose";
+import type { RequestHandler } from "express";
+import Booking = require("../models/Booking");
+const escapeRegex = (value: string) => value.slice(0, 80).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 // POST /api/bookings
 // Public customer booking creation
-const createBooking = async (req, res) => {
+const createBooking: RequestHandler = async (req, res) => {
   try {
     const {
       customerName,
@@ -28,7 +30,7 @@ const createBooking = async (req, res) => {
     ) {
       return res.status(400).json({
         success: false,
-        message: "Please provide all required booking details",
+        message: messages.booking.detailsRequired,
       });
     }
 
@@ -37,7 +39,7 @@ const createBooking = async (req, res) => {
     if (Number.isNaN(selectedDate.getTime())) {
       return res.status(400).json({
         success: false,
-        message: "Please provide a valid travel date",
+        message: messages.booking.invalidTravelDate,
       });
     }
 
@@ -54,11 +56,11 @@ const createBooking = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "Booking request submitted successfully",
+      message: messages.booking.created,
       booking,
     });
   } catch (error) {
-    if (error.name === "ValidationError") {
+    if (error instanceof mongoose.Error.ValidationError) {
       const validationMessage = Object.values(error.errors)
         .map((item) => item.message)
         .join(", ");
@@ -73,24 +75,24 @@ const createBooking = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "Server error while creating booking",
+      message: messages.booking.createError,
     });
   }
 };
 
 // GET /api/bookings
 // Protected admin booking list
-const getAllBookings = async (req, res) => {
+const getAllBookings: RequestHandler = async (req, res) => {
   try {
     const { status, search, limit } = req.query;
 
     if ((status !== undefined && (typeof status !== "string" || !["all", "pending", "confirmed", "completed", "cancelled"].includes(status))) || (search !== undefined && typeof search !== "string") || (limit !== undefined && (typeof limit !== "string" || !/^\d+$/.test(limit) || Number(limit) < 1 || Number(limit) > 100))) {
-      return res.status(400).json({ success: false, message: "Invalid booking filters" });
+      return res.status(400).json({ success: false, message: messages.booking.invalidFilters });
     }
 
-    const filter = {};
+    const filter: mongoose.QueryFilter<mongoose.InferSchemaType<typeof Booking.schema>> = {};
 
-    if (status && status !== "all") {
+    if (status === "pending" || status === "confirmed" || status === "completed" || status === "cancelled") {
       filter.status = status;
     }
 
@@ -118,14 +120,14 @@ const getAllBookings = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "Server error while retrieving bookings",
+      message: messages.booking.listError,
     });
   }
 };
 
 // GET /api/bookings/stats
 // Protected dashboard statistics
-const getBookingStats = async (req, res) => {
+const getBookingStats: RequestHandler = async (req, res) => {
   try {
     const [total, pending, confirmed, completed, cancelled] =
       await Promise.all([
@@ -151,19 +153,19 @@ const getBookingStats = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "Server error while retrieving booking statistics",
+      message: messages.booking.statsError,
     });
   }
 };
 
 // GET /api/bookings/:id
 // Protected admin single booking
-const getBookingById = async (req, res) => {
+const getBookingById: RequestHandler<{ id: string }> = async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid booking ID",
+        message: messages.booking.invalidId,
       });
     }
 
@@ -172,7 +174,7 @@ const getBookingById = async (req, res) => {
     if (!booking) {
       return res.status(404).json({
         success: false,
-        message: "Booking was not found",
+        message: messages.booking.notFound,
       });
     }
 
@@ -183,14 +185,14 @@ const getBookingById = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Server error while retrieving booking",
+      message: messages.booking.getError,
     });
   }
 };
 
 // PATCH /api/bookings/:id/status
 // Protected admin status update
-const updateBookingStatus = async (req, res) => {
+const updateBookingStatus: RequestHandler<{ id: string }> = async (req, res) => {
   try {
     const { status } = req.body || {};
 
@@ -204,14 +206,14 @@ const updateBookingStatus = async (req, res) => {
     if (!validStatuses.includes(status)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid booking status",
+        message: messages.booking.invalidStatus,
       });
     }
 
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid booking ID",
+        message: messages.booking.invalidId,
       });
     }
 
@@ -227,31 +229,31 @@ const updateBookingStatus = async (req, res) => {
     if (!booking) {
       return res.status(404).json({
         success: false,
-        message: "Booking was not found",
+        message: messages.booking.notFound,
       });
     }
 
     return res.status(200).json({
       success: true,
-      message: "Booking status updated successfully",
+      message: messages.booking.updated,
       booking,
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Server error while updating booking status",
+      message: messages.booking.updateError,
     });
   }
 };
 
 // DELETE /api/bookings/:id
 // Protected admin booking deletion
-const deleteBooking = async (req, res) => {
+const deleteBooking: RequestHandler<{ id: string }> = async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid booking ID",
+        message: messages.booking.invalidId,
       });
     }
 
@@ -260,23 +262,23 @@ const deleteBooking = async (req, res) => {
     if (!booking) {
       return res.status(404).json({
         success: false,
-        message: "Booking was not found",
+        message: messages.booking.notFound,
       });
     }
 
     return res.status(200).json({
       success: true,
-      message: "Booking deleted successfully",
+      message: messages.booking.deleted,
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Server error while deleting booking",
+      message: messages.booking.deleteError,
     });
   }
 };
 
-module.exports = {
+export {
   createBooking,
   getAllBookings,
   getBookingStats,

@@ -1,16 +1,19 @@
-const crypto = require("crypto");
-const jwt = require("jsonwebtoken");
-const Admin = require("../models/Admin");
-const {
+import messages = require("../utils/messages");
+import crypto from "node:crypto";
+import jwt from "jsonwebtoken";
+import type { RequestHandler, CookieOptions } from "express";
+import Admin = require("../models/Admin");
+
+import {
   generateAccessToken,
   generateRefreshToken,
-} = require("../utils/generateTokens");
+} from "../utils/generateTokens";
 
-const hashToken = (token) => {
+const hashToken = (token: string) => {
   return crypto.createHash("sha256").update(token).digest("hex");
 };
 
-const refreshCookieOptions = {
+const refreshCookieOptions: CookieOptions = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
   sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
@@ -19,14 +22,14 @@ const refreshCookieOptions = {
 };
 
 // POST /api/auth/login
-const loginAdmin = async (req, res) => {
+const loginAdmin: RequestHandler = async (req, res) => {
   try {
     const { email, password } = req.body || {};
 
     if (typeof email !== "string" || typeof password !== "string" || !email.trim() || !password || email.length > 254 || password.length > 1024) {
       return res.status(400).json({
         success: false,
-        message: "Email and password are required",
+        message: messages.auth.credentialsRequired,
       });
     }
 
@@ -37,7 +40,7 @@ const loginAdmin = async (req, res) => {
     if (!admin) {
       return res.status(401).json({
         success: false,
-        message: "Invalid email or password",
+        message: messages.auth.invalidCredentials,
       });
     }
 
@@ -46,7 +49,7 @@ const loginAdmin = async (req, res) => {
     if (!passwordMatches) {
       return res.status(401).json({
         success: false,
-        message: "Invalid email or password",
+        message: messages.auth.invalidCredentials,
       });
     }
 
@@ -60,7 +63,7 @@ const loginAdmin = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Admin login successful",
+      message: messages.auth.loginSuccess,
       accessToken,
       admin: {
         id: admin._id,
@@ -74,27 +77,31 @@ const loginAdmin = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "Server error during login",
+      message: messages.auth.loginError,
     });
   }
 };
 
 // POST /api/auth/refresh
-const refreshAccessToken = async (req, res) => {
+const refreshAccessToken: RequestHandler = async (req, res) => {
   try {
     const currentRefreshToken = req.cookies.refreshToken;
 
     if (!currentRefreshToken) {
       return res.status(401).json({
         success: false,
-        message: "Refresh token is missing",
+        message: messages.auth.refreshMissing,
       });
     }
 
     const decoded = jwt.verify(
       currentRefreshToken,
-      process.env.JWT_REFRESH_SECRET
+      process.env.JWT_REFRESH_SECRET!
     );
+
+    if (typeof decoded === "string" || typeof decoded.adminId !== "string") {
+      throw new Error(messages.auth.refreshPayloadInvalid);
+    }
 
     const admin = await Admin.findById(decoded.adminId).select(
       "+refreshTokenHash"
@@ -112,7 +119,7 @@ const refreshAccessToken = async (req, res) => {
 
       return res.status(401).json({
         success: false,
-        message: "Invalid refresh token",
+        message: messages.auth.refreshInvalid,
       });
     }
 
@@ -144,13 +151,13 @@ const refreshAccessToken = async (req, res) => {
 
     return res.status(401).json({
       success: false,
-      message: "Refresh token is invalid or expired",
+      message: messages.auth.refreshExpired,
     });
   }
 };
 
 // POST /api/auth/logout
-const logoutAdmin = async (req, res) => {
+const logoutAdmin: RequestHandler = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
 
@@ -158,8 +165,12 @@ const logoutAdmin = async (req, res) => {
       try {
         const decoded = jwt.verify(
           refreshToken,
-          process.env.JWT_REFRESH_SECRET
+          process.env.JWT_REFRESH_SECRET!
         );
+
+        if (typeof decoded === "string" || typeof decoded.adminId !== "string") {
+          throw new Error(messages.auth.refreshPayloadInvalid);
+        }
 
         const admin = await Admin.findById(decoded.adminId).select(
           "+refreshTokenHash"
@@ -184,12 +195,12 @@ const logoutAdmin = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Admin logout successful",
+      message: messages.auth.logoutSuccess,
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Server error during logout",
+      message: messages.auth.logoutError,
     });
   }
 };
@@ -197,19 +208,20 @@ const logoutAdmin = async (req, res) => {
 
 
 // GET /api/auth/me
-const getCurrentAdmin = async (req, res) => {
+const getCurrentAdmin: RequestHandler = async (req, res) => {
+  const admin = req.admin!;
   return res.status(200).json({
     success: true,
     admin: {
-      id: req.admin._id,
-      name: req.admin.name,
-      email: req.admin.email,
-      role: req.admin.role,
+      id: admin._id,
+      name: admin.name,
+      email: admin.email,
+      role: admin.role,
     },
   });
 };
 
-module.exports = {
+export {
   loginAdmin,
   refreshAccessToken,
   logoutAdmin,

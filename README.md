@@ -52,9 +52,15 @@ Open the website at port 3000 and staff login at `http://localhost:3001/login`. 
 
 ## Checks
 
+Application source in all three projects uses TypeScript with strict checking. Both ESLint configurations also use TypeScript. Static website PostCSS settings live in the `postcss` section of `website-frontend/package.json`, without a JavaScript loader. The backend runs `server.ts` with `tsx` in development; `npm start --prefix backend` builds and runs `dist/server.js` for production.
+
 ```sh
+npm run typecheck --prefix backend
+npm run build --prefix backend
+npm run typecheck --prefix website-frontend
 npm run lint --prefix website-frontend
 npm run build --prefix website-frontend
+npm run typecheck --prefix admin-frontend
 npm run lint --prefix admin-frontend
 npm run build --prefix admin-frontend
 ```

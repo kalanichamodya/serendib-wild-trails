@@ -1,17 +1,17 @@
-const express = require("express");
+import express from "express";
 
-const {
+import {
   createBooking,
   getAllBookings,
   getBookingStats,
   getBookingById,
   updateBookingStatus,
   deleteBooking,
-} = require("../controllers/bookingController");
+} from "../controllers/bookingController";
 
-const protectAdmin = require("../middleware/authMiddleware");
-const { bookingLimiter } = require("../middleware/rateLimits");
-const { bookingValidator } = require("../validators/bookingValidator");
+import protectAdmin = require("../middleware/authMiddleware");
+import { bookingLimiter } from "../middleware/rateLimits";
+import { bookingValidator } from "../validators/bookingValidator";
 
 const router = express.Router();
 
@@ -25,4 +25,4 @@ router.get("/:id", protectAdmin, getBookingById);
 router.patch("/:id/status", protectAdmin, updateBookingStatus);
 router.delete("/:id", protectAdmin, deleteBooking);
 
-module.exports = router;
+export = router;

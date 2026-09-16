@@ -4,28 +4,25 @@ import { apiUrl } from "../../lib/api";
 import Link from "next/link";
 import { FormEvent, Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { safaris } from "../../lib/content/safaris";
-import { destinationCards } from "../../lib/content/destinations";
+import { defaultBookingOptions, destinationOptions, experienceOptions } from "../../lib/bookingOptions";
 import styles from "./booking.module.css";
 
 const initialForm = {
   customerName: "",
   email: "",
   phone: "",
-  experience: "Jeep Safari",
-  destination: "Minneriya National Park",
+  ...defaultBookingOptions,
   travelDate: "",
   guestCount: 1,
   message: "",
 };
 
-const destinationOptions = [...safaris.map(safari => safari.location), ...destinationCards.map(destination => destination.name)];
 
 function BookingForm() {
   const params = useSearchParams();
   const [form, setForm] = useState(() => ({
     ...initialForm,
-    experience: ["Jeep Safari", "Village Tour", "Cultural Tour"].includes(params.get("experience") || "") ? params.get("experience")! : initialForm.experience,
+    experience: experienceOptions.includes(params.get("experience") || "") ? params.get("experience")! : initialForm.experience,
     destination: destinationOptions.includes(params.get("destination") || "") ? params.get("destination")! : initialForm.destination,
   }));
   const [loading, setLoading] = useState(false);
@@ -200,9 +197,7 @@ function BookingForm() {
                   onChange={updateField}
                   required
                 >
-                  <option>Jeep Safari</option>
-                  <option>Village Tour</option>
-                  <option>Cultural Tour</option>
+                {experienceOptions.map(experience => <option key={experience}>{experience}</option>)}
                 </select>
               </div>
 

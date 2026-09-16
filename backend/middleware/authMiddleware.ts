@@ -3,13 +3,13 @@ import jwt from "jsonwebtoken";
 import type { RequestHandler } from "express";
 import Admin = require("../models/Admin");
 
-const protectAdmin: RequestHandler = async (req, res, next) => {
+const requireAdminAuth: RequestHandler = async (req, res, next) => {
   try {
-    const authorizationHeader = req.headers.authorization;
+    const authHeader = req.headers.authorization;
 
     if (
-      !authorizationHeader ||
-      !authorizationHeader.startsWith("Bearer ")
+      !authHeader ||
+      !authHeader.startsWith("Bearer ")
     ) {
       return res.status(401).json({
         success: false,
@@ -17,22 +17,23 @@ const protectAdmin: RequestHandler = async (req, res, next) => {
       });
     }
 
-    const accessToken = authorizationHeader.split(" ")[1];
+    const token = authHeader.split(" ")[1];
 
-    const decoded = jwt.verify(
-      accessToken,
+    const tokenPayload = jwt.verify(
+      token,
       process.env.JWT_ACCESS_SECRET!
     );
 
-    if (typeof decoded === "string" || decoded.role !== "admin") {
+    if (typeof tokenPayload === "string" || tokenPayload.role !== "admin") {
       return res.status(403).json({
         success: false,
                message: messages.auth.adminRequired,
       });
     }
 
-    if (typeof decoded.adminId !== "string") throw new Error(messages.auth.accessPayloadInvalid);
-    const admin = await Admin.findById(decoded.adminId);
+    if (typeof tokenPayload.adminId !== "string")
+       throw new Error(messages.auth.accessPayloadInvalid);
+    const admin = await Admin.findById(tokenPayload.adminId);
 
     if (!admin) {
       return res.status(401).json({
@@ -58,4 +59,4 @@ const protectAdmin: RequestHandler = async (req, res, next) => {
   }
 };
 
-export = protectAdmin;
+export = requireAdminAuth;

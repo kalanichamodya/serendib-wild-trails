@@ -7,14 +7,14 @@ import {
   getCurrentAdmin,
 } from "../controllers/authController";
 
-import protectAdmin = require("../middleware/authMiddleware");
-import { loginLimiter } from "../middleware/rateLimits";
+import requireAdminAuth = require("../middleware/authMiddleware");
+import { limitLoginAttempts } from "../middleware/rateLimits";
 
-const router = express.Router();
+const authRouter = express.Router();
 
-router.post("/login", loginLimiter, loginAdmin);
+authRouter.post("/login", limitLoginAttempts, loginAdmin);
 
-router.all("/login", (req, res) => {
+authRouter.all("/login", (_req, res) => {
   res.set("Allow", "POST").status(405).json({
     success: false,
     message:
@@ -22,10 +22,10 @@ router.all("/login", (req, res) => {
   });
 });
 
-router.post("/refresh", refreshAccessToken);
-router.post("/logout", logoutAdmin);
+authRouter.post("/refresh", refreshAccessToken);
+authRouter.post("/logout", logoutAdmin);
 
 // Protected admin route
-router.get("/me", protectAdmin, getCurrentAdmin);
+authRouter.get("/me", requireAdminAuth, getCurrentAdmin);
 
-export = router;
+export = authRouter;

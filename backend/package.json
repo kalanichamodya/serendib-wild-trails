@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "tsx watch server.ts",
     "build": "tsc",
+    "pretest": "npm run build",
+    "test": "node --test dist/tests/*.test.js",
     "start" : "node dist/server.js",
     "type-check": "tsc --noEmit",
-    "seed:admin" : "tsx scipts/seedAdmin.ts"
+    "seed:admin" : "tsx scripts/seedAdmin.ts"
   },
   "keywords": [],
   "author": "",

@@ -1,12 +1,7 @@
 import { apiUrl } from "./apiUrl";
+import type { AdminSession } from "./authTypes";
 
-interface Session {
-  success: boolean;
-  accessToken: string;
-  admin: { id: string; name: string; email: string; role: string };
-}
-
-let refreshPromise: Promise<Session> | null = null;
+let refreshPromise: Promise<AdminSession> | null = null;
 let signedOut = false;
 const key = "serendib-signed-out";
 export function isSignedOut() {
@@ -21,13 +16,13 @@ export function allowSessionRestore() {
   try { localStorage.removeItem(key); } catch { /* Tokens remain in memory only. */ }
 }
 
-export function refreshSession(): Promise<Session> {
+export function refreshSession(): Promise<AdminSession> {
   if (isSignedOut()) return Promise.reject(new Error("Signed out"));
   if (!refreshPromise) {
     refreshPromise = fetch(apiUrl("/api/auth/refresh"), { method: "POST", credentials: "include" })
       .then(async response => {
         if (!response.ok) throw new Error("Session has expired");
-        const session: Session = await response.json();
+        const session: AdminSession = await response.json();
         if (isSignedOut()) throw new Error("Signed out");
         return session;
       }).finally(() => { refreshPromise = null; });

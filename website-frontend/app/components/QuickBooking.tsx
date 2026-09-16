@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { safaris } from "../../lib/content/safaris";
-import { destinationCards } from "../../lib/content/destinations";
+import { defaultBookingOptions, destinationOptions, experienceOptions } from "../../lib/bookingOptions";
 import styles from "./QuickBooking.module.css";
 
 export default function QuickBooking() {
-  const [experience, setExperience] = useState("Jeep Safari");
-  const [destination, setDestination] = useState("Minneriya National Park");
+  const [experience, setExperience] = useState(defaultBookingOptions.experience);
+  const [destination, setDestination] = useState(defaultBookingOptions.destination);
 
   const bookingLink = `/booking?${new URLSearchParams({ experience, destination })}`;
 
@@ -44,9 +43,7 @@ export default function QuickBooking() {
                 onChange={(event) => setExperience(event.target.value)}
                 className={styles.select}
               >
-                <option>Jeep Safari</option>
-                <option>Village Tour</option>
-                <option>Cultural Tour</option>
+                {experienceOptions.map(experience => <option key={experience}>{experience}</option>)}
               </select>
               <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xl text-[#2b2d2b]">
                 ▾
@@ -69,8 +66,7 @@ export default function QuickBooking() {
                 onChange={(event) => setDestination(event.target.value)}
                 className={styles.select}
               >
-                {safaris.map(safari => <option key={safari.location}>{safari.location}</option>)}
-                {destinationCards.map(destination => <option key={destination.name}>{destination.name}</option>)}
+                {destinationOptions.map(destination => <option key={destination}>{destination}</option>)}
               </select>
               <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xl text-[#2b2d2b]">
                 ▾

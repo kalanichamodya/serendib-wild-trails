@@ -1,5 +1,6 @@
 import messages = require("../utils/messages");
 import mongoose from "mongoose";
+import { bookingStatuses, experiences } from "../constants/booking";
 
 const bookingSchema = new mongoose.Schema(
   {
@@ -25,7 +26,7 @@ const bookingSchema = new mongoose.Schema(
     experience: {
       type: String,
       required: [true, messages.validation.experienceRequired],
-      enum: ["Jeep Safari", "Village Tour", "Cultural Tour"],
+      enum: experiences,
     },
 
     destination: {
@@ -55,7 +56,7 @@ const bookingSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["pending", "confirmed", "completed", "cancelled"],
+      enum: bookingStatuses,
       default: "pending",
     },
   },

@@ -2,38 +2,19 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 
 import type { RootState } from "../../store/store";
-import { authenticatedFetch } from "../../lib/api";
+import {
+  bookingStatuses,
+  getBookings,
+  updateBookingStatus,
+  deleteBooking as removeBooking,
+  type Booking,
+} from "../../lib/bookings";
 import styles from "./bookings.module.css";
 
-interface Booking {
-  _id: string;
-  customerName: string;
-  email: string;
-  phone: string;
-  experience: string;
-  destination: string;
-  travelDate: string;
-  guestCount: number;
-  message?: string;
-  status: "pending" | "confirmed" | "completed" | "cancelled";
-  createdAt: string;
-}
-
-const statusOptions: Booking["status"][] = [
-  "pending",
-  "confirmed",
-  "completed",
-  "cancelled",
-];
-
 export default function AdminBookingsPage() {
-  const router = useRouter();
-
-
   const {
     accessToken,
     isAuthenticated,
@@ -48,12 +29,6 @@ export default function AdminBookingsPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (sessionChecked && !isAuthenticated) {
-      router.replace("/login");
-    }
-  }, [sessionChecked, isAuthenticated, router]);
-
-  useEffect(() => {
     if (!sessionChecked || !isAuthenticated || !accessToken) {
       return;
     }
@@ -63,19 +38,7 @@ export default function AdminBookingsPage() {
       setError("");
 
       try {
-        const response = await authenticatedFetch(
-          "/api/bookings"
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(
-            data.message || "Unable to load bookings"
-          );
-        }
-
-        setBookings(data.bookings);
+        setBookings(await getBookings());
       } catch (requestError) {
         setError(
           requestError instanceof Error
@@ -121,30 +84,11 @@ export default function AdminBookingsPage() {
     setError("");
 
     try {
-      const response = await authenticatedFetch(
-        `/api/bookings/${bookingId}/status`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            status: newStatus,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.message || "Booking status update failed"
-        );
-      }
+      const updatedBooking = await updateBookingStatus(bookingId, newStatus);
 
       setBookings((currentBookings) =>
         currentBookings.map((booking) =>
-          booking._id === bookingId ? data.booking : booking
+          booking._id === bookingId ? updatedBooking : booking
         )
       );
     } catch (requestError) {
@@ -171,20 +115,7 @@ export default function AdminBookingsPage() {
     setError("");
 
     try {
-      const response = await authenticatedFetch(
-        `/api/bookings/${bookingId}`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.message || "Booking deletion failed"
-        );
-      }
+      await removeBooking(bookingId);
 
       setBookings((currentBookings) =>
         currentBookings.filter(
@@ -246,10 +177,11 @@ export default function AdminBookingsPage() {
           }
         >
           <option value="all">All statuses</option>
-          <option value="pending">Pending</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="completed">Completed</option>
-          <option value="cancelled">Cancelled</option>
+          {bookingStatuses.map(status => (
+            <option key={status} value={status}>
+              {status.charAt(0).toUpperCase() + status.slice(1)}
+            </option>
+          ))}
         </select>
 
         <div className={styles.resultCount}>
@@ -324,7 +256,7 @@ export default function AdminBookingsPage() {
                           )
                         }
                       >
-                        {statusOptions.map((status) => (
+                        {bookingStatuses.map((status) => (
                           <option key={status} value={status}>
                             {status.charAt(0).toUpperCase() +
                               status.slice(1)}

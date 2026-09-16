@@ -2,11 +2,13 @@ import messages = require("../utils/messages");
 import mongoose from "mongoose";
 import type { RequestHandler } from "express";
 import Booking = require("../models/Booking");
+import { isBookingStatus } from "../constants/booking";
+import type { BookingInput } from "../validators/bookingValidator";
 const escapeRegex = (value: string) => value.slice(0, 80).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 // POST /api/bookings
 // Public customer booking creation
-const createBooking: RequestHandler = async (req, res) => {
+const createBooking: RequestHandler<Record<string, never>, unknown, BookingInput> = async (req, res) => {
   try {
     const {
       customerName,
@@ -19,37 +21,13 @@ const createBooking: RequestHandler = async (req, res) => {
       message,
     } = req.body || {};
 
-    if (
-      !customerName ||
-      !email ||
-      !phone ||
-      !experience ||
-      !destination ||
-      !travelDate ||
-      !guestCount
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: messages.booking.detailsRequired,
-      });
-    }
-
-    const selectedDate = new Date(travelDate);
-
-    if (Number.isNaN(selectedDate.getTime())) {
-      return res.status(400).json({
-        success: false,
-        message: messages.booking.invalidTravelDate,
-      });
-    }
-
     const booking = await Booking.create({
       customerName,
       email,
       phone,
       experience,
       destination,
-      travelDate: selectedDate,
+      travelDate: new Date(travelDate),
       guestCount,
       message,
     });
@@ -86,13 +64,19 @@ const getAllBookings: RequestHandler = async (req, res) => {
   try {
     const { status, search, limit } = req.query;
 
-    if ((status !== undefined && (typeof status !== "string" || !["all", "pending", "confirmed", "completed", "cancelled"].includes(status))) || (search !== undefined && typeof search !== "string") || (limit !== undefined && (typeof limit !== "string" || !/^\d+$/.test(limit) || Number(limit) < 1 || Number(limit) > 100))) {
+    const invalidStatus = status !== undefined && status !== "all" && !isBookingStatus(status);
+    const invalidSearch = search !== undefined && typeof search !== "string";
+    const invalidLimit = limit !== undefined && (
+      typeof limit !== "string" || !/^\d+$/.test(limit) || Number(limit) < 1 || Number(limit) > 100
+    );
+
+    if (invalidStatus || invalidSearch || invalidLimit) {
       return res.status(400).json({ success: false, message: messages.booking.invalidFilters });
     }
 
     const filter: mongoose.QueryFilter<mongoose.InferSchemaType<typeof Booking.schema>> = {};
 
-    if (status === "pending" || status === "confirmed" || status === "completed" || status === "cancelled") {
+    if (isBookingStatus(status)) {
       filter.status = status;
     }
 
@@ -196,14 +180,7 @@ const updateBookingStatus: RequestHandler<{ id: string }> = async (req, res) => 
   try {
     const { status } = req.body || {};
 
-    const validStatuses = [
-      "pending",
-      "confirmed",
-      "completed",
-      "cancelled",
-    ];
-
-    if (!validStatuses.includes(status)) {
+    if (!isBookingStatus(status)) {
       return res.status(400).json({
         success: false,
         message: messages.booking.invalidStatus,

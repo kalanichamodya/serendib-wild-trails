@@ -1,15 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import type { Admin, AdminSession } from "../../lib/authTypes";
 
 import { apiUrl } from "../../lib/apiUrl";
 import { refreshSession, markSignedOut, allowSessionRestore, isSignedOut } from "../../lib/session";
 const API_URL = apiUrl("/api/auth");
-
-interface Admin {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-}
 
 interface AuthState {
   admin: Admin | null;
@@ -25,13 +19,6 @@ interface LoginDetails {
   password: string;
 }
 
-interface AuthResponse {
-  success: boolean;
-  message?: string;
-  accessToken: string;
-  admin: Admin;
-}
-
 const initialState: AuthState = {
   admin: null,
   accessToken: null,
@@ -42,7 +29,7 @@ const initialState: AuthState = {
 };
 
 export const loginAdmin = createAsyncThunk<
-  AuthResponse,
+  AdminSession,
   LoginDetails,
   { rejectValue: string }
 >("auth/loginAdmin", async (loginDetails, { rejectWithValue }) => {
@@ -70,7 +57,7 @@ export const loginAdmin = createAsyncThunk<
 });
 
 export const restoreAdminSession = createAsyncThunk<
-  AuthResponse,
+  AdminSession,
   void,
   { rejectValue: string }
 >("auth/restoreAdminSession", async (_, { rejectWithValue }) => {

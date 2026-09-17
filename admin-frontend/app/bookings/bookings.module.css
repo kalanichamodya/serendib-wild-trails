@@ -1,8 +1,8 @@
 .page {
   min-height: 100vh;
-  padding: 40px;
+  padding: 32px;
   color: #173e35;
-  background: #f5f3ed;
+  background: #f7f5ef;
 }
 
 .header {
@@ -16,7 +16,7 @@
 .header p {
   margin: 0 0 8px;
   color: #d88411;
-  font-size: 10px;
+  font-size: 30px;
   font-weight: 800;
   letter-spacing: 2px;
 }
@@ -101,7 +101,7 @@
   margin: 0 auto;
   overflow: hidden;
   border: 1px solid #e1ded5;
-  border-radius: 13px;
+  border-radius: 10px;
   background: white;
 }
 

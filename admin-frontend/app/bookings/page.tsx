@@ -22,27 +22,27 @@ export default function AdminBookingsPage() {
   } = useSelector((state: RootState) => state.auth);
 
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [searchQuery, setSearch] = useState("");
+  const [selectedStatus, setStatusFilter] = useState("all");
   const [loading, setLoading] = useState(true);
-  const [actionId, setActionId] = useState<string | null>(null);
-  const [error, setError] = useState("");
+  const [processingBookingId, setActionId] = useState<string | null>(null);
+  const [errorMessage, setError] = useState("");
 
   useEffect(() => {
     if (!sessionChecked || !isAuthenticated || !accessToken) {
       return;
     }
 
-    const loadBookings = async () => {
+    const fetchBookings = async () => {
       setLoading(true);
       setError("");
 
       try {
         setBookings(await getBookings());
-      } catch (requestError) {
+      } catch (caughtError) {
         setError(
-          requestError instanceof Error
-            ? requestError.message
+          caughtError instanceof Error
+            ? caughtError.message
             : "Unable to load bookings"
         );
       } finally {
@@ -50,7 +50,7 @@ export default function AdminBookingsPage() {
       }
     };
 
-    loadBookings();
+    fetchBookings();
   }, [
     sessionChecked,
     isAuthenticated,
@@ -58,12 +58,12 @@ export default function AdminBookingsPage() {
   ]);
 
   const filteredBookings = useMemo(() => {
-    const searchValue = search.toLowerCase().trim();
+    const searchValue = selectedStatus.toLowerCase().trim();
 
     return bookings.filter((booking) => {
       const matchesStatus =
-        statusFilter === "all" ||
-        booking.status === statusFilter;
+        selectedStatus === "all" ||
+        booking.status === selectedStatus;
 
       const matchesSearch =
         !searchValue ||
@@ -74,9 +74,9 @@ export default function AdminBookingsPage() {
 
       return matchesStatus && matchesSearch;
     });
-  }, [bookings, search, statusFilter]);
+  }, [bookings, searchQuery, selectedStatus]);
 
-  const updateStatus = async (
+  const handleStatusChange = async (
     bookingId: string,
     newStatus: Booking["status"]
   ) => {
@@ -91,10 +91,10 @@ export default function AdminBookingsPage() {
           booking._id === bookingId ? updatedBooking : booking
         )
       );
-    } catch (requestError) {
+    } catch (caughtError) {
       setError(
-        requestError instanceof Error
-          ? requestError.message
+        caughtError instanceof Error
+          ? caughtError.message
           : "Booking status update failed"
       );
     } finally {
@@ -102,12 +102,12 @@ export default function AdminBookingsPage() {
     }
   };
 
-  const deleteBooking = async (bookingId: string) => {
-    const shouldDelete = window.confirm(
+  const handleDeleteBooking = async (bookingId: string) => {
+    const isDeleteConfirmed = window.confirm(
       "Are you sure you want to delete this booking?"
     );
 
-    if (!shouldDelete) {
+    if (!isDeleteConfirmed) {
       return;
     }
 
@@ -122,10 +122,10 @@ export default function AdminBookingsPage() {
           (booking) => booking._id !== bookingId
         )
       );
-    } catch (requestError) {
+    } catch (caughtError) {
       setError(
-        requestError instanceof Error
-          ? requestError.message
+        caughtError instanceof Error
+          ? caughtError.message
           : "Booking deletion failed"
       );
     } finally {
@@ -165,13 +165,13 @@ export default function AdminBookingsPage() {
           aria-label="Search bookings"
           type="search"
           placeholder="Search name, email, phone or destination"
-          value={search}
+          value={searchQuery}
           onChange={(event) => setSearch(event.target.value)}
         />
 
         <select
           aria-label="Filter by status"
-          value={statusFilter}
+          value={selectedStatus}
           onChange={(event) =>
             setStatusFilter(event.target.value)
           }
@@ -189,9 +189,9 @@ export default function AdminBookingsPage() {
         </div>
       </section>
 
-      {error && (
+      {errorMessage && (
         <div className={styles.error} role="alert">
-          {error}
+          {errorMessage}
         </div>
       )}
 
@@ -247,9 +247,9 @@ export default function AdminBookingsPage() {
                         }`}
                         aria-label={`Status for ${booking.customerName}`}
                         value={booking.status}
-                        disabled={actionId === booking._id}
+                        disabled={processingBookingId === booking._id}
                         onChange={(event) =>
-                          updateStatus(
+                          handleStatusChange(
                             booking._id,
                             event.target
                               .value as Booking["status"]
@@ -269,12 +269,12 @@ export default function AdminBookingsPage() {
                       <button
                         type="button"
                         className={styles.deleteButton}
-                        disabled={actionId === booking._id}
+                        disabled={processingBookingId === booking._id}
                         onClick={() =>
-                          deleteBooking(booking._id)
+                          handleDeleteBooking(booking._id)
                         }
                       >
-                        {actionId === booking._id
+                        {processingBookingId === booking._id
                           ? "Processing..."
                           : "Delete"}
                       </button>

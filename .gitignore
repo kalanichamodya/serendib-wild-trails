@@ -47,3 +47,6 @@ next-env.d.ts
 **/.env.local
 **/.env.productions
 !**/.env.example
+
+# Local learning backups
+/.local-backups/

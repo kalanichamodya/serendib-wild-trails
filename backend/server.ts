@@ -1,61 +1,224 @@
-import "dotenv/config";
 import express from "express";
-import cors from "cors";
-import cookieParser from "cookie-parser";
-import helmet from "helmet";
-import messages = require("./utils/messages");
-import validateEnv = require("./config/env");
-import errorHandler = require("./middleware/errorHandler");
-import connectDB = require("./config/db");
-import apiRoutes = require("./routes");
+import messages from "./utils/messages";
 
 const app = express();
 
-const PORT = process.env.PORT || 5000;
+app.use(express.json());
 
-// Allow requests from the Next.js frontend
-app.use(
-  cors({
-    origin: (process.env.FRONTEND_URLS || "http://localhost:3000,http://localhost:3001").split(",").map(origin => origin.trim()).filter(Boolean),
-    credentials: true,
-  })
-);
+app.get("/", (req, rea) => {
+    rea.send("My first backend response!");
 
+});
+app.get("/api/health", (req,res) => {
+    res.json({
+        success: true,
+        message: "Backend is running",
+    })
+})
 
-// Read JSON request bodies
-app.use(helmet());
-app.use(express.json({ limit: "16kb" }));
+app.post("/api/greet", (req,res) => {
+    const name = req.body?.name;
 
+    if (typeof name !== "string" || name.trim() === ""){
+        res.status(400).json({
+            success: false,
+            message: messages.booking.invalidPhone,
+        });
+        return
+    }
 
-// Read cookies such as the refresh token
-app.use(cookieParser());
+    res.json({
+        success: true,
 
-
-app.use("/api", apiRoutes);
-
-// Handle unknown API routes
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: messages.server.notFound,
-  });
+        message: `Hello, ${name.trim()}!`,
+    });
 });
 
-const startServer = async (): Promise<void> => {
-  validateEnv();
-  await connectDB();
+app.post("/api/bookings" , (req,res) => {
+    const customerName = req.body?.customerName;
+    const email = req.body?.email;
+    const guests = req.body?.guests;
+    const guestCount = req.body?.guestCount;  
+    const phone = req.body?.phone;
+    const destination = req.body?.destination;
+    const experience = req.body?.experience;
+    const travelDate = req.body?.travelDate;
+    const message = req.body?.message;
 
-  app.listen(PORT, () => {
-    console.log(`Backend server running on http://localhost:${PORT}`);
+    if (typeof phone !== "string" || phone.trim() === "") {
+    res.status(400).json({
+        success: false,
+        message: messages.booking.phoneRequired,
+    });
+    return;
+    }
+    
+    const phonePattern = /^\+?[0-9]{7,15}$/;
+
+if (!phonePattern.test(phone.trim())) {
+  res.status(400).json({
+    success: false,
+    message: "Phone must contain 7–15 digits, optionally starting with +",
   });
-};
-
-app.use(errorHandler);
-
-if (require.main === module) {
-  startServer().catch((error: unknown) => {
-    console.error(`Startup failed: ${error instanceof Error ? error.message : String(error)}`);
-    process.exit(1);
-  });
+  return;
 }
-export = app;
+
+    if (
+    typeof guestCount !== "number" ||
+    !Number.isInteger(guestCount) ||
+    guestCount < 1 ||
+    guestCount > 30
+    ) {
+    res.status(400).json({
+    success: false,
+    message: messages.booking.invalidGuestCount,
+    });
+    return;
+    }
+
+    if (
+        typeof customerName !== "string" || customerName.trim() === ""
+    ) {
+        res.status(400).json({
+            success : false,
+            message: messages.booking.customerNameRequired,
+        });
+        return;
+    }
+    if (typeof email !== "string" || email.trim() === "") {
+  res.status(400).json({
+    success: false,
+    message: messages.booking.emailRequired,
+  });
+  return;
+}
+
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if (!emailPattern.test(email.trim())) {
+  res.status(400).json({
+    success: false,
+    message: messages.booking.invalidEmail,
+  });
+  return;
+}
+
+const allowedDestinations = [
+  "Minneriya National Park",
+  "Kaudulla National Park",
+  "Hurulu Eco Park",
+  "Gal Oya National Park",
+  "Habarana",
+  "Sigiriya",
+  "Dambulla",
+  "Polonnaruwa",
+  "Ritigala",
+];
+
+if (
+  typeof destination !== "string" ||
+  !allowedDestinations.includes(destination.trim())
+) {
+  res.status(400).json({
+    success: false,
+    message: messages.booking.invalidDestination,
+  });
+  return;
+}
+
+const allowedExperiences = [
+  "Jeep Safari",
+  "Village Tour",
+  "Cultural Tour",
+];
+
+if (
+  typeof experience !== "string" ||
+  !allowedExperiences.includes(experience.trim())
+) {
+  res.status(400).json({
+    success: false,
+    message: messages.booking.invalidExperience,
+  });
+  return;
+}
+
+const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+
+if (
+  typeof travelDate !== "string" ||
+  !datePattern.test(travelDate)
+) {
+  res.status(400).json({
+    success: false,
+    message: messages.booking.invalidDateFormat,
+  });
+  return;
+}
+
+const parsedDate = new Date(`${travelDate}T00:00:00.000Z`);
+
+if (
+  Number.isNaN(parsedDate.getTime()) ||
+  parsedDate.toISOString().slice(0, 10) !== travelDate
+) {
+  res.status(400).json({
+    success: false,
+    message: messages.booking.invalidCalendarDate,
+  });
+  return;
+}
+
+const todayParts = new Intl.DateTimeFormat("en-US", {
+  timeZone: "Asia/Colombo",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+}).formatToParts(new Date());
+
+const year = todayParts.find((part) => part.type === "year")!.value;
+const month = todayParts.find((part) => part.type === "month")!.value;
+const day = todayParts.find((part) => part.type === "day")!.value;
+
+const today = `${year}-${month}-${day}`;
+
+if (travelDate < today) {
+  res.status(400).json({
+    success: false,
+    message: messages.booking.pastDate,
+  });
+  return;
+}
+
+if (
+  message !== undefined &&
+  (typeof message !== "string" || message.trim().length > 1000)
+) {
+  res.status(400).json({
+    success: false,
+    message: messages.booking.invalidMessage,
+  });
+  return;
+}
+    const booking = {
+        customerName: customerName.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+        guestCount: guestCount,
+        destination: destination.trim(),
+        experience: experience.trim(),
+        travelDate: travelDate,
+    };
+
+    res.json({
+        success: true,
+        message:messages.booking.received,
+        booking: booking,
+    });
+});
+
+app.listen(5000, () => {
+    console.log("Server running at http://localhost:5000");
+});
+
+

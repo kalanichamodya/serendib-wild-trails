@@ -1,6 +1,7 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import type { FormEvent } from "react";
 import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
